@@ -1,0 +1,14 @@
+/******************************************************************
+Theme Name: Meat Map
+Theme URI: http://www.meat-map.com
+Description: The Meat Map Wordpress theme, for many win!
+Author: Mark P. Lindhout
+Author URI: http://www.marklindhout.com
+Version: 0.1
+******************************************************************/
+
+/* BEGIN - Theme Check compatibility (http://wordpress.org/plugins/theme-check/) needs these classes in this particular CSS file. */
+.sticky {}
+.gallery-caption {}
+.bypostauthor {}
+/* END - Theme Check compatibility */

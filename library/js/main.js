@@ -48,7 +48,7 @@ function mm_load () {
 
 		if ( mm_markers[j].hasOwnProperty('type') ) {
 			type = mm_markers[j]['type'];
-			icont = new MMIcon({iconUrl: 'img/mm_marker_' + type + '.png'});
+			icont = new MMIcon({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
 
 			location = L.marker([lat, lng], {icon: icont});
 
@@ -96,8 +96,8 @@ $(document).ready(function() {
 	L.control.layers(
 		null,
 		{
-			"<img src='img/mm_marker_bbq.png' /> BBQ": locations_bbq,
-			"<img src='img/mm_marker_burger.png' /> Burgers": locations_burger
+			"BBQ": locations_bbq,
+			"Burgers": locations_burger
 		},
 		{
 			collapsed: false
