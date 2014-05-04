@@ -45,7 +45,9 @@ if ($posts) {
 		$ray['_mm_location_location_type'] = $term->slug;
 		
 		$ray['_mm_location_email'] = antispambot(get_post_meta($post->ID, '_mm_location_email', true), 0);
-		$ray['_mm_location_logo'] = wp_get_attachment_image_src( get_post_meta($post->ID, '_mm_location_logo_id', true), 'thumbnail');
+		
+		$img = wp_get_attachment_image_src( get_post_meta($post->ID, '_mm_location_logo_id', true), 'thumbnail');
+		$ray['_mm_location_logo'] = $img[0];
 		$ray['_mm_location_photos'] = get_post_meta($post->ID, '_mm_location_photos', true);
 
 		// New if <= 5 days ago
