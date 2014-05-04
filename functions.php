@@ -166,13 +166,6 @@ function meatmap_scripts_and_styles() {
 		);
 
 		wp_enqueue_script(
-			'meatmap-markers',
-			get_stylesheet_directory_uri() . '/library/js/mm_markers_json.js',
-			'',
-			true // in footer ?
-		);
-
-		wp_enqueue_script(
 			'meatmap-js',
 			get_stylesheet_directory_uri() . '/library/js/main.js',
 			array( 'jquery' ),
