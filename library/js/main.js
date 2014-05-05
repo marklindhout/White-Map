@@ -1,17 +1,54 @@
-var start_coordinates = new L.LatLng(52.501045, 13.442569);
+/********************************************************
+ Map initialization
+********************************************************/
 
-var map = L.map('map', {
-    center: start_coordinates,
-    zoom: 15,
-});
+var map = L.map('map', { center: new L.LatLng(52.501102, 13.442529), zoom: 15 });
 
-// var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-// 	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-// }).addTo(map);
+/********************************************************
+ Geolocation functions
+*********************************************************/
 
-var tiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/marklindhout.hpk7ih6p/{z}/{x}/{y}.png', {
-    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+var get_location = function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      var ll = new L.LatLng(pos.coords.latitude, pos.coords.longitude);
+      set_map_to(ll, map);
+    }, function(pos) {
+      console.log(pos);
+      throw new Error('Geolocation error.');
+    });
+  }
+  else {
+    throw new Error('Geolocation is not supported by this browser.');
+  }
+};
+
+var set_map_to = function (latlng, map) {
+  if (map) {
+    map.panTo(latlng);
+  }
+  else {
+    throw new Error('No map was specified');
+  }
+};
+
+/********************************************************
+ Map layers
+********************************************************/
+
+var tiles = L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {
+ attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+
+var tiles = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+  opacity: 0.4,
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+
+/********************************************************
+ Map markers
+********************************************************/
 
 var MMIcon = L.Icon.extend({
     options: {
@@ -23,6 +60,10 @@ var MMIcon = L.Icon.extend({
 		popupAnchor:  [0, -79]
     }
 });
+
+/********************************************************
+ Meat Map - Overlays
+********************************************************/
 
 var locations_burger   = [];
 var locations_barbecue = [];
@@ -108,11 +149,23 @@ function mm_load(mm_markers, map) {
 	.addTo(map);
 }
 
+
 $(document).ready(function() {
-	var get_markers = $.get(template_directory_uri + '/library/mm_markers.php', function() {
-		mm_load(get_markers.responseJSON['posts'], map);
-	})
-	.fail(function() {
-		throw new Error('Markers could not be loaded.');
-	});
+
+/********************************************************
+ Load map markers
+********************************************************/
+  var get_markers = $.get(template_directory_uri + '/library/mm_markers.php', function() {
+    mm_load(get_markers.responseJSON['posts'], map);
+  })
+  .fail(function() {
+    throw new Error('Markers could not be loaded.');
+  });
+
+/********************************************************
+ Load map markers
+********************************************************/
+get_location();
+
+
 });
