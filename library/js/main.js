@@ -36,11 +36,11 @@ var set_map_to = function (latlng, map) {
  Map layers
 ********************************************************/
 
-var tiles = L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {
+var tiles_water = L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {
  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-var tiles = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+var tiles_toner = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
   opacity: 0.4,
   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
@@ -52,13 +52,13 @@ var tiles = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
 
 var MMIcon = L.Icon.extend({
     options: {
-		// shadowUrl: 'leaf-shadow.png',
-		iconSize:     [56, 79],
-		// shadowSize:   [50, 64],
-		iconAnchor:   [28, 79],
-		// shadowAnchor: [4, 62],
-		popupAnchor:  [0, -79]
-    }
+    // shadowUrl: 'leaf-shadow.png',
+    iconSize:     [56, 79],
+    // shadowSize:   [50, 64],
+    iconAnchor:   [28, 79],
+    // shadowAnchor: [4, 62],
+    popupAnchor:  [0, -79]
+  }
 });
 
 /********************************************************
@@ -70,7 +70,7 @@ var locations_barbecue = [];
 
 function mm_load(mm_markers, map) {
 
-	for (var j = 0; j < mm_markers.length; j++) {
+  for (var j = 0; j < mm_markers.length; j++) {
 
 		var location = false;
 		var popup_text = "";
