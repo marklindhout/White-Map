@@ -26,6 +26,15 @@ function meatmap_head_cleanup() {
 
 }
 
+
+// Hide the admin bar
+function meatmap_hide_admin_bar() {
+	echo '<style type="text/css">.show-admin-bar {display: none;}</style>';
+}
+add_action( 'admin_print_scripts-profile.php', 'meatmap_hide_admin_bar' );
+add_filter( 'show_admin_bar', '__return_false' );
+
+
 // A better title
 // http://www.deluxeblogtips.com/2012/03/better-title-meta-tag.html
 function rw_title( $title, $sep, $seplocation ) {
@@ -105,8 +114,24 @@ function meatmap_scripts_and_styles() {
 		);
 
 		wp_enqueue_style(
+			'fontawesome',
+			get_stylesheet_directory_uri() . '/library/css/vendor/fontawesome/fontawesome.min.css',
+			array(),
+			'',
+			'all'
+		);
+
+		wp_enqueue_style(
 			'rye',
 			'//fonts.googleapis.com/css?family=Rye',
+			array(),
+			'',
+			'all'
+		);
+
+		wp_enqueue_style(
+			'source-sans',
+			'//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic',
 			array(),
 			'',
 			'all'

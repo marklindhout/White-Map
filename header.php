@@ -41,23 +41,41 @@
 
 	<body <?php body_class(); ?>>
 
+		<nav id="menu" role="navigation">
+			<?php
+
+				$menu_name = 'main-nav';
+
+				if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $menu_name ] ) ) {
+					$menu = wp_get_nav_menu_object( $locations[ $menu_name ] );
+					$menu_items = wp_get_nav_menu_items($menu->term_id);
+					$menu_list = '';
+
+					foreach ( (array) $menu_items as $key => $menu_item ) {
+						$title = $menu_item->title;
+						$url = $menu_item->url;
+						$menu_list .= '<a class="menu_link" href="' . $url . '">' . $title . '</a>';
+					}
+
+				} else {
+					$menu_list = 'Menu "' . $menu_name . '" not defined.';
+				}
+
+				echo $menu_list;
+
+			?>
+		</nav>
+
 		<div id="container">
 
 			<header id="header">
 				<h1 class="logo"><a href="<?php echo home_url(); ?>" rel="nofollow"><?php bloginfo('name'); ?></a></h1>
-				<nav role="navigation">
-					<?php wp_nav_menu(array(
-						'container' => false,                           // remove nav container
-						'container_class' => 'menu cf',                 // class of container (should you choose to use it)
-						'menu' => __( 'The Main Menu', 'meatmaptheme' ),  // nav name
-						'menu_class' => 'nav top-nav cf',               // adding custom nav class
-						'theme_location' => 'main-nav',                 // where it's located in the theme
-						'before' => '',                                 // before the menu
-						'after' => '',                                  // after the menu
-						'link_before' => '',                            // before each link
-						'link_after' => '',                             // after each link
-						'depth' => 0,                                   // limit the depth of the nav
-						'fallback_cb' => ''                             // fallback function (if there is one)
-					)); ?>
-				</nav>
+				<div id="menutoggle" class="cf">
+					<a class="button"><i class="fa fa-bars"></i></a>
+				</div>
+				<?php
+					if ( is_user_logged_in() ) {
+						echo '<div class="admin_link cf"><a class="button" href="'.admin_url().'">'.__('Admin','meatmaptheme').'</a></div>';
+					}
+				?>
 			</header>
