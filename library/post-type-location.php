@@ -1,8 +1,8 @@
 <?php
-add_action( 'after_switch_theme', 'meatmap_flush_rewrite_rules' );
+add_action( 'after_switch_theme', 'whitemap_flush_rewrite_rules' );
 
 // Flush your rewrite rules
-function meatmap_flush_rewrite_rules() {
+function whitemap_flush_rewrite_rules() {
 	flush_rewrite_rules();
 }
 
@@ -11,21 +11,21 @@ function post_type_location() {
 	// creating (registering) the custom type 
 	register_post_type( 'location',
 		array( 'labels' => array(
-			'name' => __( 'Locations', 'meatmaptheme' ), /* This is the Title of the Group */
-			'singular_name' => __( 'Location', 'meatmaptheme' ), /* This is the individual type */
-			'all_items' => __( 'All Locations', 'meatmaptheme' ), /* the all items menu item */
-			'add_new' => __( 'Add New', 'meatmaptheme' ), /* The add new menu item */
-			'add_new_item' => __( 'Add New Location', 'meatmaptheme' ), /* Add New Display Title */
-			'edit' => __( 'Edit', 'meatmaptheme' ), /* Edit Dialog */
-			'edit_item' => __( 'Edit Location', 'meatmaptheme' ), /* Edit Display Title */
-			'new_item' => __( 'New Location', 'meatmaptheme' ), /* New Display Title */
-			'view_item' => __( 'View Location', 'meatmaptheme' ), /* View Display Title */
-			'search_items' => __( 'Search Location', 'meatmaptheme' ), /* Search Custom Type Title */ 
-			'not_found' =>  __( 'Nothing found in the Database.', 'meatmaptheme' ), /* This displays if there are no entries yet */ 
-			'not_found_in_trash' => __( 'Nothing found in Trash', 'meatmaptheme' ), /* This displays if there is nothing in the trash */
+			'name' => __( 'Locations', 'whitemap' ), /* This is the Title of the Group */
+			'singular_name' => __( 'Location', 'whitemap' ), /* This is the individual type */
+			'all_items' => __( 'All Locations', 'whitemap' ), /* the all items menu item */
+			'add_new' => __( 'Add New', 'whitemap' ), /* The add new menu item */
+			'add_new_item' => __( 'Add New Location', 'whitemap' ), /* Add New Display Title */
+			'edit' => __( 'Edit', 'whitemap' ), /* Edit Dialog */
+			'edit_item' => __( 'Edit Location', 'whitemap' ), /* Edit Display Title */
+			'new_item' => __( 'New Location', 'whitemap' ), /* New Display Title */
+			'view_item' => __( 'View Location', 'whitemap' ), /* View Display Title */
+			'search_items' => __( 'Search Location', 'whitemap' ), /* Search Custom Type Title */ 
+			'not_found' =>  __( 'Nothing found in the Database.', 'whitemap' ), /* This displays if there are no entries yet */ 
+			'not_found_in_trash' => __( 'Nothing found in Trash', 'whitemap' ), /* This displays if there is nothing in the trash */
 			'parent_item_colon' => ''
 			), /* end of arrays */
-			'description' => __( 'A place with address, coordinates and extra info', 'meatmaptheme' ), /* Custom Type Description */
+			'description' => __( 'A place with address, coordinates and extra info', 'whitemap' ), /* Custom Type Description */
 			'public' => true,
 			'publicly_queryable' => true,
 			'exclude_from_search' => false,
@@ -52,23 +52,33 @@ register_taxonomy( 'location-type',
 	array('location'),
 	array('hierarchical' => false,
 		'labels' => array(
-			'name' => __( 'Location Types', 'meatmaptheme' ),
-			'singular_name' => __( 'Location Type', 'meatmaptheme' ),
-			'search_items' =>  __( 'Search Location Type', 'meatmaptheme' ),
-			'all_items' => __( 'All Location Types', 'meatmaptheme' ),
-			'parent_item' => __( 'Parent Location Type', 'meatmaptheme' ),
-			'parent_item_colon' => __( 'Parent Location Type:', 'meatmaptheme' ),
-			'edit_item' => __( 'Edit Location Type', 'meatmaptheme' ),
-			'update_item' => __( 'Update Location Type', 'meatmaptheme' ),
-			'add_new_item' => __( 'Add New Location Type', 'meatmaptheme' ),
-			'new_item_name' => __( 'New Location Type Name', 'meatmaptheme' )
+			'name' => __( 'Location Types', 'whitemap' ),
+			'singular_name' => __( 'Location Type', 'whitemap' ),
+			'search_items' =>  __( 'Search Location Type', 'whitemap' ),
+			'all_items' => __( 'All Location Types', 'whitemap' ),
+			'parent_item' => __( 'Parent Location Type', 'whitemap' ),
+			'parent_item_colon' => __( 'Parent Location Type:', 'whitemap' ),
+			'edit_item' => __( 'Edit Location Type', 'whitemap' ),
+			'update_item' => __( 'Update Location Type', 'whitemap' ),
+			'add_new_item' => __( 'Add New Location Type', 'whitemap' ),
+			'new_item_name' => __( 'New Location Type Name', 'whitemap' )
 		),
 		'show_admin_column' => true, 
-		'show_ui' => true,
+		'public' => true, // If the taxonomy should be publicly queryable. 
+		'show_ui' => true, // Whether to generate a default UI for managing this taxonomy. 
+		'show_in_nav_menus' => false, // Makes this taxonomy available for selection in navigation menus. 
 		'query_var' => true,
 		'rewrite' => array( 'slug' => 'location-type' ),
 	)
 );
+
+// remove the WordPress standard meta box from the 'location' edit screen.
+// remove the WordPress standard featured image box from the 'location' edit screen.
+function location_remove_meta_boxes() {
+	remove_meta_box( 'tagsdiv-location-type' , 'location' , 'side' );
+	remove_meta_box( 'postimagediv' , 'location' , 'normal' );
+}
+add_action( 'admin_menu' , 'location_remove_meta_boxes' );
 
 
 /***************************************************************************************
@@ -84,14 +94,14 @@ function cmb_initialize_cmb_meta_boxes() {
 add_action( 'init', 'cmb_initialize_cmb_meta_boxes', 9999 );
 
 
-function meatmap_meta_boxes( array $meta_boxes ) {
+function whitemap_meta_boxes( array $meta_boxes ) {
 
 	// Start with an underscore to hide fields from custom fields list
 	$prefix = '_mm_location_';
 
 	$meta_boxes['location_metabox'] = array(
 		'id'         => 'location_metabox',
-		'title'      => __( 'Location', 'meatmaptheme' ),
+		'title'      => __( 'Location', 'whitemap' ),
 		'pages'      => array( 'location' ), // Post type
 		'context'    => 'normal',
 		'priority'   => 'high',
@@ -100,7 +110,7 @@ function meatmap_meta_boxes( array $meta_boxes ) {
 
 		'fields'     => array(
 			array(
-				'name'		=> __( 'Description', 'meatmaptheme' ),
+				'name'		=> __( 'Description', 'whitemap' ),
 				'id'		=> $prefix . 'description',
 				'type'		=> 'text',
 			),
@@ -121,6 +131,21 @@ function meatmap_meta_boxes( array $meta_boxes ) {
 				'type' => 'text_email',
 			),
 			array(
+				'name'		=> __( 'Street Address', 'whitemap' ),
+				'id'		=> $prefix . 'street_address',
+				'type'		=> 'text',
+			),
+			array(
+				'name'		=> __( 'Postal Code', 'whitemap' ),
+				'id'		=> $prefix . 'postal-code',
+				'type'		=> 'text',
+			),
+			array(
+				'name'		=> __( 'City', 'whitemap' ),
+				'id'		=> $prefix . 'city',
+				'type'		=> 'text',
+			),
+			array(
 				'name'		=> 'Coordinates',
 				'desc'		=> 'Drag the marker to set the exact location',
 				'id'		=> $prefix . 'location',
@@ -128,19 +153,19 @@ function meatmap_meta_boxes( array $meta_boxes ) {
 				'sanitization_cb' => 'pw_map_sanitise',
 			),
 			array(
-				'name'		=> __( 'Location Type', 'meatmaptheme' ),
+				'name'		=> __( 'Location Type', 'whitemap' ),
 				'id'	=> $prefix . 'location_type',
 				'type'		=> 'taxonomy_radio',
 				'taxonomy'	=> 'location-type',
 				'inline'	=> true,
 			),
 			array(
-				'name'		=> __( 'Logo', 'meatmaptheme' ),
+				'name'		=> __( 'Logo', 'whitemap' ),
 				'id'		=> $prefix . 'logo',
 				'type'		=> 'file',
 			),
 			array(
-				'name'		=> __( 'Photos', 'meatmaptheme' ),
+				'name'		=> __( 'Photos', 'whitemap' ),
 				'id'		=> $prefix . 'photos',
 				'type'		=> 'file_list',
 				'allow' => array( 'attachment' ),
@@ -151,4 +176,4 @@ function meatmap_meta_boxes( array $meta_boxes ) {
 
 	return $meta_boxes;
 }
-add_filter( 'cmb_meta_boxes', 'meatmap_meta_boxes' );
+add_filter( 'cmb_meta_boxes', 'whitemap_meta_boxes' );

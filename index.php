@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 		<div id="map-container">
-			<div id="map"></div>
+			<div id="wmap"></div>
 		</div>
 
 <?php get_footer(); ?>

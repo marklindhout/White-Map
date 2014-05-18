@@ -75,7 +75,7 @@
 				</div>
 				<?php
 					if ( is_user_logged_in() ) {
-						echo '<div class="admin_link cf"><a class="button" href="'.admin_url().'">'.__('Admin','meatmaptheme').'</a></div>';
+						echo '<div class="admin_link cf"><a class="button" href="'.admin_url().'">'.__('Admin','whitemap').'</a></div>';
 					}
 				?>
 			</header>

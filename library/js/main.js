@@ -1,37 +1,4 @@
-if ( $('#map-container').length !== 0 ) {
-	/********************************************************
-	 Map initialization
-	********************************************************/
-	var map = L.map('map', { center: new L.LatLng(52.501102, 13.442529), zoom: 15 });
-
-	/********************************************************
-	 Map layers
-	********************************************************/
-	var tiles_water = L.tileLayer('http://c.tile.stamen.com/watercolor/{z}/{x}/{y}.png', {
-	 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-	}).addTo(map);
-
-	var tiles_toner = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-		opacity: 0.4,
-		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-	}).addTo(map);
-
-
-	/********************************************************
-	 Map markers
-	********************************************************/
-	var MMIcon = L.Icon.extend({
-			options: {
-			// shadowUrl: 'leaf-shadow.png',
-			iconSize:     [56, 79],
-			// shadowSize:   [50, 64],
-			iconAnchor:   [28, 79],
-			// shadowAnchor: [4, 62],
-			popupAnchor:  [0, -79]
-		}
-	});
-}
-
+var WhiteMap = WhiteMap || {};
 
 /********************************************************
  Geolocation functions
@@ -110,7 +77,7 @@ function mm_load(mm_markers, map) {
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_location_type') ) {
 						type = mm_markers[j]['_mm_location_location_type'];
-						icont = new MMIcon({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
+						icont = new WhiteMap.wmap_icon_normal({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
 
 						if (lat || lng) {
 								location = L.marker([lat, lng], {icon: icont});
@@ -154,8 +121,8 @@ $(document).ready(function() {
 		/********************************************************
 		 Load map markers
 		********************************************************/
-		var get_markers = $.get(template_directory_uri + '/library/mm_markers.php', function() {
-			mm_load(get_markers.responseJSON['posts'], map);
+		var get_markers = $.get(template_directory_uri + '/library/json-markers.php', function() {
+			mm_load(get_markers.responseJSON['posts'], WhiteMap.wmap);
 		})
 		.fail(function() {
 			throw new Error('Markers could not be loaded.');

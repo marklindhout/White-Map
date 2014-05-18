@@ -143,35 +143,30 @@ Main styles
 	z-index: 1;
 	overflow: hidden;
 	height: 64px;
-	background: #b56d3d;
-	background: -moz-linear-gradient(top, #b56d3d 0%, #5b2307 99%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #b56d3d), color-stop(99%, #5b2307));
-	background: -webkit-linear-gradient(top, #b56d3d 0%, #5b2307 99%);
-	background: -o-linear-gradient(top, #b56d3d 0%, #5b2307 99%);
-	background: -ms-linear-gradient(top, #b56d3d 0%, #5b2307 99%);
-	background: linear-gradient(to bottom, #b56d3d 0%, #5b2307 99%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b56d3d', endColorstr='#5b2307', GradientType=0);
+	background-color: #eee;
 }
 
 #header .logo {
-	line-height: 145px;
+	line-height: 128px;
 	position: absolute;
 	z-index: 1;
 	left: 50%;
 	display: block;
 	overflow: hidden;
-	width: 317px;
-	height: 145px;
-	margin: 0 0 0 -158px;
+	width: 256px;
+	height: 128px;
+	margin: 0 0 0 -128px;
 	padding: 0;
-	text-indent: 317px;
-	background: rgba(0,0,0, 0.5);
+	text-indent: 256px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-color: transparent;
 }
 
 #header .logo a {
 	display: block;
-	width: 317px;
-	height: 145px;
+	width: 256px;
+	height: 128px;
 }
 
 #header nav, #header .top-nav {
@@ -244,7 +239,7 @@ Main styles
 	bottom: 0;
 	left: 0;
 }
-#map {
+#wmap {
 	position: relative;
 	z-index: 0;
 	width: 100%;

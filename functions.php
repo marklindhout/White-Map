@@ -1,6 +1,6 @@
 <?php
 
-function meatmap_head_cleanup() {
+function whitemap_head_cleanup() {
 	// category feeds
 	remove_action( 'wp_head', 'feed_links_extra', 3 );
 	// post and comment feeds
@@ -20,18 +20,18 @@ function meatmap_head_cleanup() {
 	// WP version
 	remove_action( 'wp_head', 'wp_generator' );
 	// remove WP version from css
-	add_filter( 'style_loader_src', 'meatmap_remove_wp_ver_css_js', 9999 );
+	add_filter( 'style_loader_src', 'whitemap_remove_wp_ver_css_js', 9999 );
 	// remove Wp version from scripts
-	add_filter( 'script_loader_src', 'meatmap_remove_wp_ver_css_js', 9999 );
+	add_filter( 'script_loader_src', 'whitemap_remove_wp_ver_css_js', 9999 );
 
 }
 
 
 // Hide the admin bar
-function meatmap_hide_admin_bar() {
+function whitemap_hide_admin_bar() {
 	echo '<style type="text/css">.show-admin-bar {display: none;}</style>';
 }
-add_action( 'admin_print_scripts-profile.php', 'meatmap_hide_admin_bar' );
+add_action( 'admin_print_scripts-profile.php', 'whitemap_hide_admin_bar' );
 add_filter( 'show_admin_bar', '__return_false' );
 
 
@@ -68,24 +68,24 @@ function rw_title( $title, $sep, $seplocation ) {
 
 
 // remove WP version from RSS
-function meatmap_rss_version() { return ''; }
+function whitemap_rss_version() { return ''; }
 
 // remove WP version from scripts
-function meatmap_remove_wp_ver_css_js( $src ) {
+function whitemap_remove_wp_ver_css_js( $src ) {
 	if ( strpos( $src, 'ver=' ) )
 		$src = remove_query_arg( 'ver', $src );
 	return $src;
 }
 
 // remove injected CSS for recent comments widget
-function meatmap_remove_wp_widget_recent_comments_style() {
+function whitemap_remove_wp_widget_recent_comments_style() {
 	if ( has_filter( 'wp_head', 'wp_widget_recent_comments_style' ) ) {
 		remove_filter( 'wp_head', 'wp_widget_recent_comments_style' );
 	}
 }
 
 // remove injected CSS from recent comments widget
-function meatmap_remove_recent_comments_style() {
+function whitemap_remove_recent_comments_style() {
 	global $wp_widget_factory;
 	if (isset($wp_widget_factory->widgets['WP_Widget_Recent_Comments'])) {
 		remove_action( 'wp_head', array($wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style') );
@@ -93,12 +93,12 @@ function meatmap_remove_recent_comments_style() {
 }
 
 // remove injected CSS from gallery
-function meatmap_gallery_style($css) {
+function whitemap_gallery_style($css) {
 	return preg_replace( "!<style type='text/css'>(.*?)</style>!s", '', $css );
 }
 
 
-function meatmap_scripts_and_styles() {
+function whitemap_scripts_and_styles() {
 
 	global $wp_styles;
 	// call global $wp_styles variable to add conditional wrapper around ie stylesheet the WordPress way
@@ -154,7 +154,7 @@ function meatmap_scripts_and_styles() {
 		);
 
 		wp_enqueue_style(
-			'meatmap',
+			'whitemap',
 			get_stylesheet_directory_uri() . '/library/css/style.css',
 			array(),
 			'',
@@ -191,7 +191,7 @@ function meatmap_scripts_and_styles() {
 		);
 
 		wp_enqueue_script(
-			'meatmap-js',
+			'whitemap-js',
 			get_stylesheet_directory_uri() . '/library/js/main.js',
 			array( 'jquery' ),
 			'',
@@ -205,7 +205,7 @@ function meatmap_scripts_and_styles() {
 THEME SUPPORT
 *********************/
 
-function meatmap_theme_support() {
+function whitemap_theme_support() {
 	add_theme_support( 'post-thumbnails' );
 	set_post_thumbnail_size(125, 125, true);
 	add_theme_support( 'custom-background',
@@ -221,8 +221,8 @@ function meatmap_theme_support() {
 	add_theme_support( 'menus' );
 	register_nav_menus(
 		array(
-			'main-nav' => __( 'The Main Menu', 'meatmaptheme' ),   // main nav in header
-			'footer-links' => __( 'Footer Links', 'meatmaptheme' ) // secondary nav in footer
+			'main-nav' => __( 'The Main Menu', 'whitemap' ),   // main nav in header
+			'footer-links' => __( 'Footer Links', 'whitemap' ) // secondary nav in footer
 			)
 		);
 }
@@ -231,9 +231,9 @@ function meatmap_theme_support() {
 RELATED POSTS FUNCTION
 *********************/
 
-// Related Posts Function (call using meatmap_related_posts(); )
-function meatmap_related_posts() {
-	echo '<ul id="meatmap-related-posts">';
+// Related Posts Function (call using whitemap_related_posts(); )
+function whitemap_related_posts() {
+	echo '<ul id="whitemap-related-posts">';
 	global $post;
 	$tags = wp_get_post_tags( $post->ID );
 	if($tags) {
@@ -251,19 +251,19 @@ function meatmap_related_posts() {
 			<li class="related_post"><a class="entry-unrelated" href="<?php the_permalink() ?>" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a></li>
 			<?php endforeach; }
 			else { ?>
-			<?php echo '<li class="no_related_post">' . __( 'No Related Posts Yet!', 'meatmaptheme' ) . '</li>'; ?>
+			<?php echo '<li class="no_related_post">' . __( 'No Related Posts Yet!', 'whitemap' ) . '</li>'; ?>
 			<?php }
 		}
 		wp_reset_postdata();
 		echo '</ul>';
-	} /* end meatmap related posts function */
+	} /* end whitemap related posts function */
 
 /*********************
 PAGE NAVI
 *********************/
 
 // Numeric Page Navi (built into the theme by default)
-function meatmap_page_navi() {
+function whitemap_page_navi() {
 	global $wp_query;
 	$bignum = 999999999;
 	if ( $wp_query->max_num_pages <= 1 )
@@ -288,60 +288,39 @@ RANDOM CLEANUP ITEMS
 *********************/
 
 // remove the p from around imgs (http://css-tricks.com/snippets/wordpress/remove-paragraph-tags-from-around-images/)
-function meatmap_filter_ptags_on_images($content){
+function whitemap_filter_ptags_on_images($content){
 	return preg_replace('/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content);
 }
 
 // This removes the annoying […] to a Read More link
-function meatmap_excerpt_more($more) {
+function whitemap_excerpt_more($more) {
 	global $post;
 	// edit here if you like
-	return '...  <a class="excerpt-read-more" href="'. get_permalink($post->ID) . '" title="'. __( 'Read ', 'meatmaptheme' ) . get_the_title($post->ID).'">'. __( 'Read more &raquo;', 'meatmaptheme' ) .'</a>';
+	return '...  <a class="excerpt-read-more" href="'. get_permalink($post->ID) . '" title="'. __( 'Read ', 'whitemap' ) . get_the_title($post->ID).'">'. __( 'Read more &raquo;', 'whitemap' ) .'</a>';
 }
 
-/*********************
-LOCATION SUPPORT
-*********************/
+/************* LOCATION SUPPORT ****************/
 require_once( 'library/post-type-location.php' );
 
+/************* THEME OPTIONS **********************/
+require_once( 'library/theme-options.php' );
 
-function meatmap_ahoy() {
-
-	// let's get language support going, if you need it
-	load_theme_textdomain( 'meatmaptheme', get_template_directory() . '/library/translation' );
-
-	// launching operation cleanup
-	add_action( 'init', 'meatmap_head_cleanup' );
-	// A better title
+/************* THEME FILTERS AND HOOKS **********************/
+function whitemap_ahoy() {
+	load_theme_textdomain( 'whitemap', get_template_directory() . '/library/translation' );
+	add_action( 'init', 'whitemap_head_cleanup' );
 	add_filter( 'wp_title', 'rw_title', 10, 3 );
-	// remove WP version from RSS
-	add_filter( 'the_generator', 'meatmap_rss_version' );
-	// remove pesky injected css for recent comments widget
-	add_filter( 'wp_head', 'meatmap_remove_wp_widget_recent_comments_style', 1 );
-	// clean up comment styles in the head
-	add_action( 'wp_head', 'meatmap_remove_recent_comments_style', 1 );
-	// clean up gallery output in wp
-	add_filter( 'gallery_style', 'meatmap_gallery_style' );
-
-	// enqueue base scripts and styles
-	add_action( 'wp_enqueue_scripts', 'meatmap_scripts_and_styles', 999 );
-	// ie conditional wrapper
-
-	// launching this stuff after theme setup
-	meatmap_theme_support();
-
-	// adding sidebars to Wordpress (these are created in functions.php)
-	add_action( 'widgets_init', 'meatmap_register_sidebars' );
-
-	// cleaning up random code around images
-	add_filter( 'the_content', 'meatmap_filter_ptags_on_images' );
-	// cleaning up excerpt
-	add_filter( 'excerpt_more', 'meatmap_excerpt_more' );
-
-} /* end meatmap ahoy */
-
-// let's get this party started
-add_action( 'after_setup_theme', 'meatmap_ahoy' );
+	add_filter( 'the_generator', 'whitemap_rss_version' );
+	add_filter( 'wp_head', 'whitemap_remove_wp_widget_recent_comments_style', 1 );
+	add_action( 'wp_head', 'whitemap_remove_recent_comments_style', 1 );
+	add_filter( 'gallery_style', 'whitemap_gallery_style' );
+	add_action( 'wp_enqueue_scripts', 'whitemap_scripts_and_styles', 999 );
+	whitemap_theme_support();
+	add_action( 'widgets_init', 'whitemap_register_sidebars' );
+	add_filter( 'the_content', 'whitemap_filter_ptags_on_images' );
+	add_filter( 'excerpt_more', 'whitemap_excerpt_more' );
+}
+add_action( 'after_setup_theme', 'whitemap_ahoy' );
 
 
 /************* OEMBED SIZE OPTIONS *************/
@@ -353,8 +332,8 @@ if ( ! isset( $content_width ) ) {
 /************* THUMBNAIL SIZE OPTIONS *************/
 
 // Thumbnail sizes
-add_image_size( 'meatmap-thumb-600', 600, 150, true );
-add_image_size( 'meatmap-thumb-300', 300, 100, true );
+add_image_size( 'whitemap-thumb-600', 600, 150, true );
+add_image_size( 'whitemap-thumb-300', 300, 100, true );
 
 /*
 to add more sizes, simply copy a line from above
@@ -368,20 +347,20 @@ inside the thumbnail function.
 
 For example, to call the 300 x 300 sized image,
 we would use the function:
-<?php the_post_thumbnail( 'meatmap-thumb-300' ); ?>
+<?php the_post_thumbnail( 'whitemap-thumb-300' ); ?>
 for the 600 x 100 image:
-<?php the_post_thumbnail( 'meatmap-thumb-600' ); ?>
+<?php the_post_thumbnail( 'whitemap-thumb-600' ); ?>
 
 You can change the names and dimensions to whatever
 you like. Enjoy!
 */
 
-add_filter( 'image_size_names_choose', 'meatmap_custom_image_sizes' );
+add_filter( 'image_size_names_choose', 'whitemap_custom_image_sizes' );
 
-function meatmap_custom_image_sizes( $sizes ) {
+function whitemap_custom_image_sizes( $sizes ) {
 	return array_merge( $sizes, array(
-		'meatmap-thumb-600' => __('600px by 150px'),
-		'meatmap-thumb-300' => __('300px by 100px'),
+		'whitemap-thumb-600' => __('600px by 150px'),
+		'whitemap-thumb-300' => __('300px by 100px'),
 		) );
 }
 
@@ -396,48 +375,23 @@ new image size.
 /************* ACTIVE SIDEBARS ********************/
 
 // Sidebars & Widgetizes Areas
-function meatmap_register_sidebars() {
+function whitemap_register_sidebars() {
 	register_sidebar(array(
 		'id' => 'sidebar1',
-		'name' => __( 'Sidebar 1', 'meatmaptheme' ),
-		'description' => __( 'The first (primary) sidebar.', 'meatmaptheme' ),
+		'name' => __( 'Sidebar 1', 'whitemap' ),
+		'description' => __( 'The first (primary) sidebar.', 'whitemap' ),
 		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget' => '</div>',
 		'before_title' => '<h4 class="widgettitle">',
 		'after_title' => '</h4>',
 		));
 
-	/*
-	to add more sidebars or widgetized areas, just copy
-	and edit the above sidebar code. In order to call
-	your new sidebar just use the following code:
-
-	Just change the name to whatever your new
-	sidebar's id is, for example:
-
-	register_sidebar(array(
-		'id' => 'sidebar2',
-		'name' => __( 'Sidebar 2', 'meatmaptheme' ),
-		'description' => __( 'The second (secondary) sidebar.', 'meatmaptheme' ),
-		'before_widget' => '<div id="%1$s" class="widget %2$s">',
-		'after_widget' => '</div>',
-		'before_title' => '<h4 class="widgettitle">',
-		'after_title' => '</h4>',
-	));
-
-	To call the sidebar in your template, you can just copy
-	the sidebar.php file and rename it to your sidebar's name.
-	So using the above example, it would be:
-	sidebar-sidebar2.php
-
-	*/
-} // don't remove this bracket!
-
+}
 
 /************* COMMENT LAYOUT *********************/
 
 // Comment Layout
-function meatmap_comments( $comment, $args, $depth ) {
+function whitemap_comments( $comment, $args, $depth ) {
 	$GLOBALS['comment'] = $comment; ?>
 	<div id="comment-<?php comment_ID(); ?>" <?php comment_class('cf'); ?>>
 		<article  class="cf">
@@ -455,13 +409,13 @@ function meatmap_comments( $comment, $args, $depth ) {
 					?>
 					<img data-gravatar="http://www.gravatar.com/avatar/<?php echo md5( $bgauthemail ); ?>?s=40" class="load-gravatar avatar avatar-48 photo" height="40" width="40" src="<?php echo get_template_directory_uri(); ?>/library/images/nothing.gif" />
 					<?php // end custom gravatar call ?>
-					<?php printf(__( '<cite class="fn">%1$s</cite> %2$s', 'meatmaptheme' ), get_comment_author_link(), edit_comment_link(__( '(Edit)', 'meatmaptheme' ),'  ','') ) ?>
-					<time datetime="<?php echo comment_time('Y-m-j'); ?>"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ) ?>"><?php comment_time(__( 'F jS, Y', 'meatmaptheme' )); ?> </a></time>
+					<?php printf(__( '<cite class="fn">%1$s</cite> %2$s', 'whitemap' ), get_comment_author_link(), edit_comment_link(__( '(Edit)', 'whitemap' ),'  ','') ) ?>
+					<time datetime="<?php echo comment_time('Y-m-j'); ?>"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ) ?>"><?php comment_time(__( 'F jS, Y', 'whitemap' )); ?> </a></time>
 
 				</header>
 				<?php if ($comment->comment_approved == '0') : ?>
 				<div class="alert alert-info">
-					<p><?php _e( 'Your comment is awaiting moderation.', 'meatmaptheme' ) ?></p>
+					<p><?php _e( 'Your comment is awaiting moderation.', 'whitemap' ) ?></p>
 				</div>
 			<?php endif; ?>
 			<section class="comment_content cf">
@@ -471,3 +425,4 @@ function meatmap_comments( $comment, $args, $depth ) {
 		</article>
 		<?php
 }
+
