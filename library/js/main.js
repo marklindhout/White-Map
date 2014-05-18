@@ -77,10 +77,10 @@ function mm_load(mm_markers, map) {
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_location_type') ) {
 						type = mm_markers[j]['_mm_location_location_type'];
-						// icont = new WhiteMap.wmap_icon_normal({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
+						//icont = new WhiteMap.wmap_icon_normal({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
 
 						if (lat || lng) {
-								location = L.marker([lat, lng], {icon: WhiteMap.wmap_icon_normal});
+								location = L.marker([lat, lng], {icon: new WhiteMap.wmap_icon_0()});
 						} else {
 								console.log('(“' + mm_markers[j]['title'] + '”, ' + mm_markers[j]['id'] + ') Provided coordinates are not numbers.');
 						}

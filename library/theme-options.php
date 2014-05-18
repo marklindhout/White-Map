@@ -346,9 +346,7 @@ function whitemap_theme_option_js() {
 	$show_map_search           = whitemap_get_option('show_map_search');
 	$show_location_type_filter = whitemap_get_option('show_location_type_filter');
 	$default_map_location      = whitemap_get_option('default_map_location');
-	$map_pin_normal            = whitemap_get_option('map_pin_normal');
-	$map_pin_shadow            = whitemap_get_option('map_pin_shadow');
-	$map_pin_highlighted       = whitemap_get_option('map_pin_highlighted');
+	$map_pins                  = whitemap_get_option('map_pins');
 	$map_layers                = whitemap_get_option('map_layers');
 
 	// start the style block
@@ -379,28 +377,26 @@ function whitemap_theme_option_js() {
 	}
 
 	// register the icons
-	if ( !empty($map_pin_normal) /*&& !empty($map_pin_highlighted)*/ ) {
-		$output .= 'WhiteMap.wmap_icon = L.Icon.extend({' . "\n";
-		$output .= 'options: {' . "\n";
-		//$output .= 'iconUrl: "' . $map_pin_normal . '",' . "\n";
-		$output .= 'iconSize:     [64, 64],' . "\n";
-		$output .= 'iconAnchor:   [32, 64],' . "\n";
-		$output .= 'popupAnchor:  [0, -64],' . "\n";
-		if ( !empty($map_pin_shadow) ) {
-			$output .= 'shadowUrl: "' . $map_pin_shadow . '",' . "\n";
+	if ( !empty($map_pins) ) {
+		$i = 0;
+
+		foreach ($map_pins as $pin) {
+			$output .= 'WhiteMap.wmap_icon_' . $i . ' = L.Icon.extend({' . "\n";
+			$output .= 'options: {' . "\n";
+			$output .= 'iconUrl: "' . $pin['map_pin_image'] . '",' . "\n";
+			$output .= 'iconSize:     [64, 64],' . "\n";
+			$output .= 'iconAnchor:   [32, 64],' . "\n";
+			$output .= 'popupAnchor:  [0, -64],' . "\n";
+			if ( !empty($pin['shadow']) ) {
+				$output .= 'shadowUrl: "' . $pin['shadow'] . '",' . "\n";
+			}
+			$output .= 'shadowSize:   [50, 64],' . "\n";
+			$output .= 'shadowAnchor: [4, 62]' . "\n";
+			$output .= '}' . "\n";
+			$output .= '});' . "\n";
+
+			$i += 1;
 		}
-		$output .= 'shadowSize:   [50, 64],' . "\n";
-		$output .= 'shadowAnchor: [4, 62]' . "\n";
-		$output .= '}' . "\n";
-		$output .= '});' . "\n";
-
-		$output .= 'WhiteMap.wmap_icon_normal = new WhiteMap.wmap_icon({' . "\n";
-		$output .= 'iconUrl: "' . $map_pin_normal . '",' . "\n";
-		$output .= '});' . "\n";
-
-		// $output .= 'WhiteMap.wmap_icon_highlight = new WhiteMap.wmap_icon({' . "\n";
-		// $output .= 'iconUrl: "' . $map_pin_highlighted . '",' . "\n";
-		// $output .= '});' . "\n";
 	}
 
 	// end the style block
