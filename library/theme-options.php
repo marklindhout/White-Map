@@ -98,6 +98,38 @@ class whitemap_Admin {
 					'allow' => array( 'attachment' ),
 				),
 				array(
+					'name'    => __( 'Favicon', 'whitemap' ),
+					'default' => get_stylesheet_directory_uri() . '/library/img/favicon.ico',
+					'desc'    => __( '16x16 pixels, windows ICO format.', 'whitemap' ),
+					'id'      => 'favicon',
+					'type'    => 'file',
+					'allow' => array( 'attachment' ),
+				),
+				array(
+					'name'    => __( 'Site Icon (32x32)', 'whitemap' ),
+					'default' => get_stylesheet_directory_uri() . '/library/img/favicon.png',
+					'desc'    => __( '32x32 pixels, PNG format.', 'whitemap' ),
+					'id'      => 'favicon_png',
+					'type'    => 'file',
+					'allow' => array( 'attachment' ),
+				),
+				array(
+					'name'    => __( 'Apple Touch Icon', 'whitemap' ),
+					// 'default' => get_stylesheet_directory_uri() . '/library/img/apple-touch-icon.png',
+					'desc'    => __( '152x152 pixels, PNG format.', 'whitemap' ),
+					'id'      => 'apple_touch_icon',
+					'type'    => 'file',
+					'allow' => array( 'attachment' ),
+				),
+				array(
+					'name'    => __( 'Windows Tile Icon (270x270)', 'whitemap' ),
+					// 'default' => get_stylesheet_directory_uri() . '/library/img/windows-tile-icon.png',
+					'desc'    => __( '270x270 pixels, PNG format.', 'whitemap' ),
+					'id'      => 'windows_tile_icon',
+					'type'    => 'file',
+					'allow' => array( 'attachment' ),
+				),
+				array(
 					'name'    => __( 'Text Color', 'whitemap' ),
 					'id'      => 'text_color',
 					'type'    => 'colorpicker',
@@ -156,20 +188,29 @@ class whitemap_Admin {
 					'id' => 'show_location_type_filter',
 					'type' => 'checkbox'
 				),
+
+				// Variable amounts of map pins. Please do hook up to taxonomy!
 				array(
-					'name'    => __( 'Map Pin (normal)', 'whitemap' ),
-					'desc'    => __( 'Will be resized to fit within 64 x 64 pixels.', 'whitemap' ),
-					'id'      => 'map_pin_normal',
-					'type'    => 'file',
-					'allow' => array( 'attachment' ),
+					'id'          => 'map_pins',
+					'type'        => 'group',
+					'options'     => array(
+						'group_title'   => __( 'Pin {#}', 'whitemap' ), // {#} gets replaced by row number
+						'add_button'    => __( 'Add Another Pin', 'whitemap' ),
+						'remove_button' => __( 'Remove Pin', 'whitemap' ),
+						'sortable'      => true, // beta
+					),
+					// Fields array works the same, except id's only need to be unique for this group. Prefix is not needed.
+					'fields'      => array(
+						array(
+							'name'    => __( 'Image', 'whitemap' ),
+							'id'      => 'map_pin_image',
+							'type'    => 'file',
+							'default' => get_stylesheet_directory_uri() . '/library/img/marker_blue.png',
+							'allow' => array( 'attachment' ),
+						),
+					),
 				),
-				array(
-					'name'    => __( 'Map Pin (highlighted)', 'whitemap' ),
-					'desc'    => __( 'Will be resized to fit within 64 x 64 pixels.', 'whitemap' ),
-					'id'      => 'map_pin_highlighted',
-					'type'    => 'file',
-					'allow' => array( 'attachment' ),
-				),
+
 				array(
 					'id'          => 'map_layers',
 					'type'        => 'group',
@@ -306,6 +347,7 @@ function whitemap_theme_option_js() {
 	$show_location_type_filter = whitemap_get_option('show_location_type_filter');
 	$default_map_location      = whitemap_get_option('default_map_location');
 	$map_pin_normal            = whitemap_get_option('map_pin_normal');
+	$map_pin_shadow            = whitemap_get_option('map_pin_shadow');
 	$map_pin_highlighted       = whitemap_get_option('map_pin_highlighted');
 	$map_layers                = whitemap_get_option('map_layers');
 
@@ -320,30 +362,45 @@ function whitemap_theme_option_js() {
 
 	// add the map layers
 	if ( !empty($map_layers) ) {
+		
+		$i = 0;
+
 		foreach ($map_layers as $layer) {
-			$output .= 'WhiteMap.wmap_layer = L.tileLayer("' . $layer['layer_url'] . '",' . "\n";
+			$output .= 'WhiteMap.wmap_layer_' . $i . ' = L.tileLayer("' . $layer['layer_url'] . '",' . "\n";
 			$output .= '{' . "\n";
 			if ( !empty($layer['layer_attribution']) ) {
 				$output .= 'attribution: "' . addslashes($layer['layer_attribution']) . '",' . "\n";
 			}
 			$output .= 'opacity: ' . $layer['layer_opacity'];
 			$output .= '}).addTo(WhiteMap.wmap);' . "\n";
+
+			$i += 1;
 		}
 	}
 
 	// register the icons
-	if ( !empty($map_pin_normal) ) {
-		$output .= 'WhiteMap.wmap_icon_normal = L.Icon.extend({' . "\n";
+	if ( !empty($map_pin_normal) /*&& !empty($map_pin_highlighted)*/ ) {
+		$output .= 'WhiteMap.wmap_icon = L.Icon.extend({' . "\n";
 		$output .= 'options: {' . "\n";
-		// $output .= 'shadowUrl: "' . $map_pin_normal . '",' . "\n";
+		//$output .= 'iconUrl: "' . $map_pin_normal . '",' . "\n";
 		$output .= 'iconSize:     [64, 64],' . "\n";
-		// $output .= 'shadowSize:   [50, 64],' . "\n";
 		$output .= 'iconAnchor:   [32, 64],' . "\n";
-		// $output .= 'shadowAnchor: [4, 62],' . "\n";
-		$output .= 'popupAnchor:  [0, -64]' . "\n";
+		$output .= 'popupAnchor:  [0, -64],' . "\n";
+		if ( !empty($map_pin_shadow) ) {
+			$output .= 'shadowUrl: "' . $map_pin_shadow . '",' . "\n";
+		}
+		$output .= 'shadowSize:   [50, 64],' . "\n";
+		$output .= 'shadowAnchor: [4, 62]' . "\n";
 		$output .= '}' . "\n";
 		$output .= '});' . "\n";
-		
+
+		$output .= 'WhiteMap.wmap_icon_normal = new WhiteMap.wmap_icon({' . "\n";
+		$output .= 'iconUrl: "' . $map_pin_normal . '",' . "\n";
+		$output .= '});' . "\n";
+
+		// $output .= 'WhiteMap.wmap_icon_highlight = new WhiteMap.wmap_icon({' . "\n";
+		// $output .= 'iconUrl: "' . $map_pin_highlighted . '",' . "\n";
+		// $output .= '});' . "\n";
 	}
 
 	// end the style block

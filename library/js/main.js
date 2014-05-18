@@ -3,11 +3,11 @@ var WhiteMap = WhiteMap || {};
 /********************************************************
  Geolocation functions
 *********************************************************/
-var get_location = function() {
+WhiteMap.get_location = function() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function (pos) {
 			var ll = new L.LatLng(pos.coords.latitude, pos.coords.longitude);
-			set_map_to(ll, map);
+			WhiteMap.set_map_to(ll, WhiteMap.wmap);
 		}, function(pos) {
 			console.log(pos);
 			throw new Error('Geolocation error.');
@@ -18,7 +18,7 @@ var get_location = function() {
 	}
 };
 
-var set_map_to = function (latlng, map) {
+WhiteMap.set_map_to = function (latlng, map) {
 	if (map) {
 		map.panTo(latlng);
 	}
@@ -77,10 +77,10 @@ function mm_load(mm_markers, map) {
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_location_type') ) {
 						type = mm_markers[j]['_mm_location_location_type'];
-						icont = new WhiteMap.wmap_icon_normal({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
+						// icont = new WhiteMap.wmap_icon_normal({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
 
 						if (lat || lng) {
-								location = L.marker([lat, lng], {icon: icont});
+								location = L.marker([lat, lng], {icon: WhiteMap.wmap_icon_normal});
 						} else {
 								console.log('(“' + mm_markers[j]['title'] + '”, ' + mm_markers[j]['id'] + ') Provided coordinates are not numbers.');
 						}
@@ -131,7 +131,7 @@ $(document).ready(function() {
 		/********************************************************
 		 Load map markers
 		********************************************************/
-		get_location();
+		WhiteMap.get_location();
 
 	}
 
