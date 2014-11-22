@@ -29,7 +29,7 @@ class whitemap_Admin {
 	 */
 	public function __construct() {
 		// Set our title
-		$this->title = __( 'Site Options', 'whitemap' );
+		$this->title = __( 'Map Options', 'whitemap' );
 	}
 
 	/**
@@ -130,34 +130,10 @@ class whitemap_Admin {
 					'allow' => array( 'attachment' ),
 				),
 				array(
-					'name'    => __( 'Text Color', 'whitemap' ),
-					'id'      => 'text_color',
+					'name'    => __( 'Main Color', 'whitemap' ),
+					'id'      => 'main_color',
 					'type'    => 'colorpicker',
-					'default' => '#333333',
-				),
-				array(
-					'name'    => __( 'Link Color', 'whitemap' ),
-					'id'      => 'link_color',
-					'type'    => 'colorpicker',
-					'default' => '#0074a2',
-				),
-				array(
-					'name'    => __( 'Link Hover Color', 'whitemap' ),
-					'id'      => 'link_hover_color',
-					'type'    => 'colorpicker',
-					'default' => '#2ea2cc',
-				),
-				array(
-					'name'    => __( 'Header Background Color (top)', 'whitemap' ),
-					'id'      => 'header_background_color_top',
-					'type'    => 'colorpicker',
-					'default' => '#ffffff',
-				),
-				array(
-					'name'    => __( 'Header Background Color (bottom)', 'whitemap' ),
-					'id'      => 'header_background_color_bottom',
-					'type'    => 'colorpicker',
-					'default' => '#eeeeee',
+					'default' => '#fd0000',
 				),
 
 				// Map branding
@@ -173,79 +149,7 @@ class whitemap_Admin {
 					'type'		=> 'pw_map',
 					'sanitization_cb' => 'pw_map_sanitise',
 				),
-				array(
-					'name' => __( 'Show Zoom Controls', 'whitemap' ),
-					'id' => 'show_zoom_controls',
-					'type' => 'checkbox'
-				),
-				array(
-					'name' => __( 'Show Map Search', 'whitemap' ),
-					'id' => 'show_map_search',
-					'type' => 'checkbox'
-				),
-				array(
-					'name' => __( 'Show Location Type Filter', 'whitemap' ),
-					'id' => 'show_location_type_filter',
-					'type' => 'checkbox'
-				),
 
-				// Variable amounts of map pins. Please do hook up to taxonomy!
-				array(
-					'id'          => 'map_pins',
-					'type'        => 'group',
-					'options'     => array(
-						'group_title'   => __( 'Pin {#}', 'whitemap' ), // {#} gets replaced by row number
-						'add_button'    => __( 'Add Another Pin', 'whitemap' ),
-						'remove_button' => __( 'Remove Pin', 'whitemap' ),
-						'sortable'      => true, // beta
-					),
-					// Fields array works the same, except id's only need to be unique for this group. Prefix is not needed.
-					'fields'      => array(
-						array(
-							'name'    => __( 'Image', 'whitemap' ),
-							'id'      => 'map_pin_image',
-							'type'    => 'file',
-							'default' => get_stylesheet_directory_uri() . '/library/img/marker_blue.png',
-							'allow' => array( 'attachment' ),
-						),
-					),
-				),
-
-				array(
-					'id'          => 'map_layers',
-					'type'        => 'group',
-					'options'     => array(
-						'group_title'   => __( 'Map Layer {#}', 'whitemap' ), // {#} gets replaced by row number
-						'add_button'    => __( 'Add Another Map Layer', 'whitemap' ),
-						'remove_button' => __( 'Remove Map Layer', 'whitemap' ),
-						'sortable'      => true, // beta
-					),
-					// Fields array works the same, except id's only need to be unique for this group. Prefix is not needed.
-					'fields'      => array(
-						array(
-							'name' => __( 'Layer URL', 'whitemap' ),
-							'id'   => 'layer_url',
-							'type' => 'text',
-						),
-						array(
-							'name' => __( 'Layer Opacity', 'whitemap' ),
-							'desc' => __( '25% is almost transparent, 100% is fully opaque.', 'whitemap' ),
-							'id'   => 'layer_opacity',
-							'type'    => 'radio_inline',
-							'options' => array(
-								'0.25'  => __( '25%', 'whitemap' ),
-								'0.50'  => __( '50%', 'whitemap' ),
-								'0.75'  => __( '75%', 'whitemap' ),
-								'1.00' => __( '100%', 'whitemap' ),
-							),
-						),
-						array(
-							'name' => __( 'Layer Attribution', 'whitemap' ),
-							'id' => 'layer_attribution',
-							'type' => 'textarea_code',
-						),
-					),
-				),
 			),
 		);
 
@@ -283,28 +187,11 @@ function whitemap_get_option( $key = '' ) {
 
 function whitemap_theme_option_css() {
 
-	$header_bg_top    = whitemap_get_option('header_background_color_top');
-	$header_bg_bottom = whitemap_get_option('header_background_color_bottom');
-	$text_color       = whitemap_get_option('text_color');
-	$link_color       = whitemap_get_option('link_color');
-	$link_hover_color = whitemap_get_option('link_hover_color');
-	$site_logo        = whitemap_get_option('site_logo');
+	$main_color = whitemap_get_option('main_color');
+	$site_logo  = whitemap_get_option('site_logo');
 
 	// start the style block
 	$output = '<style>' . "\n";
-
-	if ( !empty($header_bg_top) && !empty($header_bg_bottom) ) {
-		$output .= "\n" . '#header {' . "\n";
-		$output .= 'background: ' . $header_bg_top . ';' . "\n";
-		$output .= 'background: -moz-linear-gradient(top, ' . $header_bg_top . ' 0%, ' . $header_bg_bottom . ' 99%);' . "\n";
-		$output .= 'background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, ' . $header_bg_top . '), color-stop(99%, ' . $header_bg_bottom . '));' . "\n";
-		$output .= 'background: -webkit-linear-gradient(top, ' . $header_bg_top . ' 0%, ' . $header_bg_bottom . ' 99%);' . "\n";
-		$output .= 'background: -o-linear-gradient(top, ' . $header_bg_top . ' 0%, ' . $header_bg_bottom . ' 99%);' . "\n";
-		$output .= 'background: -ms-linear-gradient(top, ' . $header_bg_top . ' 0%, ' . $header_bg_bottom . ' 99%);' . "\n";
-		$output .= 'background: linear-gradient(to bottom, ' . $header_bg_top . ' 0%, ' . $header_bg_bottom . ' 99%);' . "\n";
-		$output .= 'filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="' . $header_bg_top . '", endColorstr="' . $header_bg_bottom . '", GradientType=0);' . "\n";
-		$output .= '}' . "\n";
-	}
 
 	if ( !empty($site_logo) ) {
 		$output .= "\n" . '#header .logo {' . "\n";
@@ -312,19 +199,15 @@ function whitemap_theme_option_css() {
 		$output .= '}' . "\n";
 	}
 
-	if ( !empty($text_color) ) {
-		$output .= "\n" . 'body {' . "\n";
-		$output .= 'color: ' . $text_color . ';' . "\n";
-		$output .= '}' . "\n";
-	}
-
-	if ( !empty($link_color) && !empty($link_hover_color) ) {
-		$output .= "\n" . 'a, a:link, a:visited {' . "\n";
-		$output .= 'color: ' . $link_color . ';' . "\n";
-		$output .= '}' . "\n";
-		$output .= "\n" . 'a:hover, a:active {' . "\n";
-		$output .= 'color: ' . $link_hover_color . ';' . "\n";
-		$output .= '}' . "\n";
+	if ( !empty($main_color) ) {
+		$output .= "\n";
+		$output .= 'a, a:link, a:visited {' . "color: " . $main_color . "}";
+		$output .= "\n";
+		$output .= 'h1, h2, h3, h4, h5, h6 {' . "color: " . $main_color . "}";
+		$output .= "\n";
+		$output .= '.button {' . "background-color: " . $main_color . "}";
+		$output .= "\n";
+		$output .= '.brand {' . "background-color: " . $main_color . "}";
 	}
 
 	// end the style block
@@ -342,12 +225,20 @@ function whitemap_theme_option_js() {
 	$current_theme = sanitize_title( wp_get_theme() );
 
 	$default_map_location      = whitemap_get_option('default_map_location');
-	$show_zoom_controls        = whitemap_get_option('show_zoom_controls');
-	$show_map_search           = whitemap_get_option('show_map_search');
-	$show_location_type_filter = whitemap_get_option('show_location_type_filter');
-	$default_map_location      = whitemap_get_option('default_map_location');
-	$map_pins                  = whitemap_get_option('map_pins');
-	$map_layers                = whitemap_get_option('map_layers');
+	$map_pins                  = array(
+		array(
+			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker.png',
+			//'shadow' => get_stylesheet_directory_uri() . '/library/img/default_marker_shadow.png',
+			'shadow' => '',
+		)
+	);
+	$map_layers                = array(
+		array(
+			'layer_url'         => 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png',
+			'layer_attribution' => '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+			'layer_opacity'     => '0.50',
+		),
+	);
 
 	// start the style block
 	$output = '<script type="text/javascript">' . "\n";
