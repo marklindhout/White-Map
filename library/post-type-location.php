@@ -87,8 +87,8 @@ CUSTOM META BOXES for the LOCATION content type
 
 function cmb_initialize_cmb_meta_boxes() {
 	if ( ! class_exists( 'cmb_Meta_Box' ) ) {
-		require_once 'cmb/init.php';
-		require_once 'cmb/field_map/cmb-field-map.php';
+		require_once 'php/cmb/init.php';
+		require_once 'php/cmb/field_map/cmb-field-map.php';
 	}
 }
 add_action( 'init', 'cmb_initialize_cmb_meta_boxes', 9999 );

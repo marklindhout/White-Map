@@ -2,8 +2,8 @@
 
 function pw_map_field( $field, $meta ) {
 	wp_enqueue_script( 'pw_google_maps_api', '//maps.googleapis.com/maps/api/js?sensor=false&libraries=places', array(), null );
-	wp_enqueue_script( 'pw_google_maps_init', get_stylesheet_directory_uri() . '/library/cmb/field_map/js/script.js', array( 'pw_google_maps_api' ), null );
-	wp_enqueue_style( 'pw_google_maps_css', get_stylesheet_directory_uri() . '/library/cmb/field_map/css/style.css', array(), null );
+	wp_enqueue_script( 'pw_google_maps_init', get_stylesheet_directory_uri() . '/library/php/cmb/field_map/js/script.js', array( 'pw_google_maps_api' ), null );
+	wp_enqueue_style( 'pw_google_maps_css', get_stylesheet_directory_uri() . '/library/php/cmb/field_map/css/style.css', array(), null );
 
 	echo '<input type="text" class="map-search" id="' . $field['id'] . '" />';
 	echo '<div class="map"></div>';

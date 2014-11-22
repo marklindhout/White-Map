@@ -28,7 +28,7 @@ WhiteMap.set_map_to = function (latlng, map) {
 };
 
 /********************************************************
- Meat Map - Overlays
+Overlays
 ********************************************************/
 var locations_burger   = [];
 var locations_barbecue = [];

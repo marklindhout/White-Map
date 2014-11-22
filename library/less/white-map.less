@@ -1,0 +1,44 @@
+/******************************************************************
+Theme Name: White Map
+Description: A white-label map theme for quickly creating a map-based site.
+Author: Mark P. Lindhout
+Author URI: http://www.marklindhout.com
+Version: 0.1.2
+******************************************************************/
+
+
+// VARIABLES
+@import "variables";
+
+// MIXINS
+@import "mixins";
+
+// NORMALIZE
+@import "vendor/normalize/normalize";
+
+// FONTAWESOME
+@import "vendor/fontawesome/font-awesome";
+
+// LEAFLET MAP LIBRARY
+@import "vendor/leaflet/leaflet.css";
+
+// HELPERS
+@import "helpers";
+
+// PALM
+@import "palm";
+
+// LAP
+@media only screen and (min-width: 1024px) {
+	@import 'lap';
+}
+
+// DESK
+@media only screen and (min-width: 1200px) {
+	@import 'desk';	
+}
+
+// PRINT
+@media print {
+	@import "print";
+}

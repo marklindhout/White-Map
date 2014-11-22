@@ -122,22 +122,6 @@ function whitemap_scripts_and_styles() {
 		);
 
 		wp_enqueue_style(
-			'rye',
-			'//fonts.googleapis.com/css?family=Rye',
-			array(),
-			'',
-			'all'
-		);
-
-		wp_enqueue_style(
-			'source-sans',
-			'//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic',
-			array(),
-			'',
-			'all'
-		);
-
-		wp_enqueue_style(
 			'normalize',
 			get_stylesheet_directory_uri() . '/library/css/normalize.min.css',
 			array(),
