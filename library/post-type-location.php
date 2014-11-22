@@ -69,7 +69,7 @@ add_action( 'init', 'cmb_initialize_cmb_meta_boxes', 9999 );
 function whitemap_meta_boxes( array $meta_boxes ) {
 
 	// Start with an underscore to hide fields from custom fields list
-	$prefix = '_mm_location_';
+	$prefix = 'whitemap_';
 
 	$meta_boxes['location_metabox'] = array(
 		'id'         => 'location_metabox',

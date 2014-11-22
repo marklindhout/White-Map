@@ -239,6 +239,11 @@ function whitemap_theme_option_js() {
 			'layer_opacity'     => '0.50',
 		),
 	);
+	$map_popups = array(
+		array(
+			'' => '',
+		),
+	);
 
 	// start the style block
 	$output = '<script type="text/javascript">' . "\n";
@@ -269,6 +274,7 @@ function whitemap_theme_option_js() {
 
 	// register the icons
 	if ( !empty($map_pins) ) {
+
 		$i = 0;
 
 		foreach ($map_pins as $pin) {
@@ -289,6 +295,24 @@ function whitemap_theme_option_js() {
 			$i += 1;
 		}
 	}
+
+	// if ( !empty($map_popups) ) {
+
+	// 	$i = 0;
+
+	// 	foreach ($map_pins as $pin) {
+	// 		$output .= 'WhiteMap.wmap_popup = L.Popup.extend({' . "\n";
+	// 		$output .= 'options: {' . "\n";
+	// 		$output .= 'maxWidth: 640,' . "\n";
+	// 		$output .= 'minWidth: 320,' . "\n";
+	// 		$output .= 'autoPanPaddingTopLeft: "128px",' . "\n";
+	// 		$output .= '}' . "\n";
+	// 		$output .= '});' . "\n";
+
+	// 		$i += 1;
+	// 	}
+	// }
+
 
 	// end the style block
 	$output .= '</script>' . "\n";

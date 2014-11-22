@@ -1,5 +1,9 @@
 <?php
 
+/********************************************************
+CLEANUP HEAD
+********************************************************/
+
 function whitemap_head_cleanup() {
 	// category feeds
 	remove_action( 'wp_head', 'feed_links_extra', 3 );
@@ -27,13 +31,21 @@ function whitemap_head_cleanup() {
 }
 
 
-// Hide the admin bar
+/********************************************************
+HIDE ADMIN BAR
+********************************************************/
+
 function whitemap_hide_admin_bar() {
 	echo '<style type="text/css">.show-admin-bar {display: none;}</style>';
 }
 add_action( 'admin_print_scripts-profile.php', 'whitemap_hide_admin_bar' );
 add_filter( 'show_admin_bar', '__return_false' );
 
+
+
+/********************************************************
+TITLE
+********************************************************/
 
 // A better title
 // http://www.deluxeblogtips.com/2012/03/better-title-meta-tag.html
@@ -67,6 +79,11 @@ function rw_title( $title, $sep, $seplocation ) {
 }
 
 
+
+/********************************************************
+CLEAN WP VERSION FROM FILES
+********************************************************/
+
 // remove WP version from RSS
 function whitemap_rss_version() { return ''; }
 
@@ -92,11 +109,10 @@ function whitemap_remove_recent_comments_style() {
 	}
 }
 
-// remove injected CSS from gallery
-function whitemap_gallery_style($css) {
-	return preg_replace( "!<style type='text/css'>(.*?)</style>!s", '', $css );
-}
 
+/********************************************************
+SCRIPTS AND STYLES
+********************************************************/
 
 function whitemap_scripts_and_styles() {
 
@@ -156,35 +172,27 @@ function whitemap_scripts_and_styles() {
 	}
 }
 
-/*********************
+/********************************************************
 THEME SUPPORT
-*********************/
+********************************************************/
 
 function whitemap_theme_support() {
 	add_theme_support( 'post-thumbnails' );
 	set_post_thumbnail_size(125, 125, true);
-	add_theme_support( 'custom-background',
-		array(
-			'default-image' => '',    // background image default
-			'default-color' => '',    // background color default (dont add the #)
-			'wp-head-callback' => '_custom_background_cb',
-			'admin-head-callback' => '',
-			'admin-preview-callback' => ''
-			)
-		);
-	add_theme_support('automatic-feed-links');
+
 	add_theme_support( 'menus' );
 	register_nav_menus(
 		array(
-			'main-nav' => __( 'The Main Menu', 'whitemap' ),   // main nav in header
-			'footer-links' => __( 'Footer Links', 'whitemap' ) // secondary nav in footer
-			)
+			'main-nav' => __( 'Left slide-in', 'whitemap' ),
+		)
 		);
 }
 
-/*********************
-RELATED POSTS FUNCTION
-*********************/
+
+
+/********************************************************
+RELATED POSTS (based on tags)
+********************************************************/
 
 // Related Posts Function (call using whitemap_related_posts(); )
 function whitemap_related_posts() {
@@ -211,13 +219,13 @@ function whitemap_related_posts() {
 		}
 		wp_reset_postdata();
 		echo '</ul>';
-	} /* end whitemap related posts function */
+}
 
-/*********************
+
+
+/********************************************************
 PAGE NAVI
-*********************/
-
-// Numeric Page Navi (built into the theme by default)
+********************************************************/
 function whitemap_page_navi() {
 	global $wp_query;
 	$bignum = 999999999;
@@ -238,30 +246,28 @@ function whitemap_page_navi() {
 	echo '</nav>';
 } /* end page navi */
 
-/*********************
-RANDOM CLEANUP ITEMS
-*********************/
+
+
+/********************************************************
+CLEAN UP STUFF THINGSIES
+********************************************************/
 
 // remove the p from around imgs (http://css-tricks.com/snippets/wordpress/remove-paragraph-tags-from-around-images/)
 function whitemap_filter_ptags_on_images($content){
 	return preg_replace('/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content);
 }
 
+
 // This removes the annoying […] to a Read More link
 function whitemap_excerpt_more($more) {
 	global $post;
 	// edit here if you like
-	return '...  <a class="excerpt-read-more" href="'. get_permalink($post->ID) . '" title="'. __( 'Read ', 'whitemap' ) . get_the_title($post->ID).'">'. __( 'Read more &raquo;', 'whitemap' ) .'</a>';
+	return '<a class="button excerpt-read-more" href="'. get_permalink($post->ID) . '" title="'. __( 'Read ', 'whitemap' ) . get_the_title($post->ID).'">'. __( 'Read more &raquo;', 'whitemap' ) .'</a>';
 }
 
-/************* LOCATION SUPPORT ****************/
-require_once( 'library/post-type-location.php' );
-
-/************* THEME OPTIONS **********************/
-require_once( 'library/theme-options.php' );
 
 /************* THEME FILTERS AND HOOKS **********************/
-function whitemap_ahoy() {
+function whitemap_init() {
 	load_theme_textdomain( 'whitemap', get_template_directory() . '/library/translation' );
 	add_action( 'init', 'whitemap_head_cleanup' );
 	add_filter( 'wp_title', 'rw_title', 10, 3 );
@@ -275,66 +281,38 @@ function whitemap_ahoy() {
 	add_filter( 'the_content', 'whitemap_filter_ptags_on_images' );
 	add_filter( 'excerpt_more', 'whitemap_excerpt_more' );
 }
-add_action( 'after_setup_theme', 'whitemap_ahoy' );
+add_action( 'after_setup_theme', 'whitemap_init' );
 
 
-/************* OEMBED SIZE OPTIONS *************/
+
+/********************************************************
+OEMBED OPTIONS
+********************************************************/
 
 if ( ! isset( $content_width ) ) {
 	$content_width = 640;
 }
 
-/************* THUMBNAIL SIZE OPTIONS *************/
 
-// Thumbnail sizes
+
+/********************************************************
+IMAGE SIZES
+********************************************************/
+
 add_image_size( 'whitemap-thumb-600', 600, 150, true );
 add_image_size( 'whitemap-thumb-300', 300, 100, true );
 
-/*
-to add more sizes, simply copy a line from above
-and change the dimensions & name. As long as you
-upload a "featured image" as large as the biggest
-set width or height, all the other sizes will be
-auto-cropped.
 
-To call a different size, simply change the text
-inside the thumbnail function.
 
-For example, to call the 300 x 300 sized image,
-we would use the function:
-<?php the_post_thumbnail( 'whitemap-thumb-300' ); ?>
-for the 600 x 100 image:
-<?php the_post_thumbnail( 'whitemap-thumb-600' ); ?>
+/********************************************************
+SIDEBARS
+********************************************************/
 
-You can change the names and dimensions to whatever
-you like. Enjoy!
-*/
-
-add_filter( 'image_size_names_choose', 'whitemap_custom_image_sizes' );
-
-function whitemap_custom_image_sizes( $sizes ) {
-	return array_merge( $sizes, array(
-		'whitemap-thumb-600' => __('600px by 150px'),
-		'whitemap-thumb-300' => __('300px by 100px'),
-		) );
-}
-
-/*
-The function above adds the ability to use the dropdown menu to select
-the new images sizes you have just created from within the media manager
-when you add media to your content blocks. If you add more image sizes,
-duplicate one of the lines in the array and name it according to your
-new image size.
-*/
-
-/************* ACTIVE SIDEBARS ********************/
-
-// Sidebars & Widgetizes Areas
 function whitemap_register_sidebars() {
 	register_sidebar(array(
 		'id' => 'sidebar1',
-		'name' => __( 'Sidebar 1', 'whitemap' ),
-		'description' => __( 'The first (primary) sidebar.', 'whitemap' ),
+		'name' => __( 'Menu Lower Area', 'whitemap' ),
+		'description' => __( 'Area located at the bottom of the slide-in-menu on the loeft of the page.', 'whitemap' ),
 		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget' => '</div>',
 		'before_title' => '<h4 class="widgettitle">',
@@ -344,9 +322,12 @@ function whitemap_register_sidebars() {
 }
 
 /********************************************************
-JSON LOCATION FEED
+WHITE MAP
 ********************************************************/
+require_once( 'library/post-type-location.php' );
+require_once( 'library/theme-options.php' );
 
+// JSON Location feed
 function whitemap_json_location_feed() {
 
 	global $wpdb;
@@ -366,24 +347,21 @@ function whitemap_json_location_feed() {
 	$json = array();
 
 	$json['err'] = false;
-	 
 
 	foreach ($posts_query->posts as $post) {
 
 		$ray = array();
-		//the_post();
 		
 		$ray['id']                              = $post->ID;
 		$ray['date']                            = $post->post_date;
 		$ray['timestamp']                       = strtotime($post->post_date);
 		$ray['link']                            = $post->guid;
 		$ray['title']                           = $post->post_title;
-		$ray['description']                     = $post->content;
+		$ray['description']                     = $post->post_content;
 
-		$ray['_mm_location_location_latitude']  = floatval(get_post_meta($post->ID, '_mm_location_location_latitude', true));
-		$ray['_mm_location_location_longitude'] = floatval(get_post_meta($post->ID, '_mm_location_location_longitude', true));
-		
-		
+		$ray['latitude']  = floatval(get_post_meta($post->ID, 'whitemap_location_latitude', true));
+		$ray['longitude'] = floatval(get_post_meta($post->ID, 'whitemap_location_longitude', true));
+				
 		// New if <= 5 days ago
 		$ray['new']                             = date('U') - $ray['timestamp'] <= 60 * 60 * 24 * 5;
 		$json['posts'][]                        = $ray;
