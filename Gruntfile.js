@@ -30,9 +30,20 @@ module.exports = function(grunt) {
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
 			build: {
-				src: 'library/js/*.js',
+				src: '<%= jshint.files %>',
 				dest: 'library/js/<%= pkg.name %>.min.js'
-			}
+			},
+		},
+
+		watch: {
+			js: {
+				files: ['<%= jshint.files %>'],
+				tasks: ['uglify', 'jshint'],
+			},
+			less: {
+				files: ['library/less/**/*.less'],
+				tasks: ['less'],
+			},
 		},
 
 	});

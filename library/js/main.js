@@ -44,45 +44,45 @@ function mm_load(mm_markers, map) {
 				var type = false;
 
 				if ( mm_markers[j].hasOwnProperty('title') ) {
-						popup_text += '<img src="' + mm_markers[j]['_mm_location_logo'] + '" />\n';
+						popup_text += '<img src="' + mm_markers[j]._mm_location_logo + '" />\n';
 				}
 
 				if ( mm_markers[j].hasOwnProperty('title') ) {
-						popup_text += '<h2>' + mm_markers[j]['title'] + '</h2>\n';
+						popup_text += '<h2>' + mm_markers[j].title + '</h2>\n';
 				}
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_description') ) {
-						popup_text += '<p>' + mm_markers[j]['_mm_location_description'] + '</p>\n';
+						popup_text += '<p>' + mm_markers[j]._mm_location_description + '</p>\n';
 				}
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_telephone_number') ) {
-						popup_text += '<p><strong>' + mm_markers[j]['_mm_location_telephone_number'] + '</strong></p>\n';
+						popup_text += '<p><strong>' + mm_markers[j]._mm_location_telephone_number + '</strong></p>\n';
 				}
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_email') ) {
-						popup_text += '<p>' + mm_markers[j]['_mm_location_email'] + '</p>\n';
+						popup_text += '<p>' + mm_markers[j]._mm_location_email + '</p>\n';
 				}
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_website_url') ) {
-						popup_text += '<p><a href="' + mm_markers[j]['_mm_location_website_url'] + '" rel="nofollow" target="_blank">' + mm_markers[j]['_mm_location_website_url'] + '</a></p>\n';
+						popup_text += '<p><a href="' + mm_markers[j]._mm_location_website_url + '" rel="nofollow" target="_blank">' + mm_markers[j]._mm_location_website_url + '</a></p>\n';
 				}
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_location_latitude') ) {
-						lat = mm_markers[j]['_mm_location_location_latitude'];
+						lat = mm_markers[j]._mm_location_location_latitude;
 				}
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_location_longitude') ) {
-						lng = mm_markers[j]['_mm_location_location_longitude'];
+						lng = mm_markers[j]._mm_location_location_longitude;
 				}
 
 				if ( mm_markers[j].hasOwnProperty('_mm_location_location_type') ) {
-						type = mm_markers[j]['_mm_location_location_type'];
+						type = mm_markers[j]._mm_location_location_type;
 						//icont = new WhiteMap.wmap_icon_normal({iconUrl: template_directory_uri + '/library/img/mm_marker_' + type + '.png'});
 
 						if (lat || lng) {
 								location = L.marker([lat, lng], {icon: new WhiteMap.wmap_icon_0()});
 						} else {
-								console.log('(“' + mm_markers[j]['title'] + '”, ' + mm_markers[j]['id'] + ') Provided coordinates are not numbers.');
+								console.log('(“' + mm_markers[j].title + '”, ' + mm_markers[j].id + ') Provided coordinates are not numbers.');
 						}
 
 						if (type === 'burger' ) {
@@ -122,7 +122,7 @@ $(document).ready(function() {
 		 Load map markers
 		********************************************************/
 		var get_markers = $.get(template_directory_uri + '/library/json-markers.php', function() {
-			mm_load(get_markers.responseJSON['posts'], WhiteMap.wmap);
+			mm_load(get_markers.responseJSON.posts, WhiteMap.wmap);
 		})
 		.fail(function() {
 			throw new Error('Markers could not be loaded.');
