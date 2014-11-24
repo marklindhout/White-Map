@@ -99,7 +99,7 @@ class whitemap_Admin {
 				),
 				array(
 					'name'    => __( 'Favicon', 'whitemap' ),
-					'default' => get_stylesheet_directory_uri() . '/library/img/favicon.ico',
+					'default' => get_stylesheet_directory_uri() . '/library/img/default_favicon.ico',
 					'desc'    => __( '16x16 pixels, windows ICO format.', 'whitemap' ),
 					'id'      => 'favicon',
 					'type'    => 'file',
@@ -107,7 +107,7 @@ class whitemap_Admin {
 				),
 				array(
 					'name'    => __( 'Site Icon (32x32)', 'whitemap' ),
-					'default' => get_stylesheet_directory_uri() . '/library/img/favicon.png',
+					'default' => get_stylesheet_directory_uri() . '/library/img/default_site_icon.png',
 					'desc'    => __( '32x32 pixels, PNG format.', 'whitemap' ),
 					'id'      => 'favicon_png',
 					'type'    => 'file',
@@ -115,7 +115,7 @@ class whitemap_Admin {
 				),
 				array(
 					'name'    => __( 'Apple Touch Icon', 'whitemap' ),
-					// 'default' => get_stylesheet_directory_uri() . '/library/img/apple-touch-icon.png',
+					'default' => get_stylesheet_directory_uri() . '/library/img/default_apple_touch_icon.png',
 					'desc'    => __( '152x152 pixels, PNG format.', 'whitemap' ),
 					'id'      => 'apple_touch_icon',
 					'type'    => 'file',
@@ -123,7 +123,7 @@ class whitemap_Admin {
 				),
 				array(
 					'name'    => __( 'Windows Tile Icon (270x270)', 'whitemap' ),
-					// 'default' => get_stylesheet_directory_uri() . '/library/img/windows-tile-icon.png',
+					'default' => get_stylesheet_directory_uri() . '/library/img/default_windows_tile_icon.png',
 					'desc'    => __( '270x270 pixels, PNG format.', 'whitemap' ),
 					'id'      => 'windows_tile_icon',
 					'type'    => 'file',
@@ -225,13 +225,15 @@ function whitemap_theme_option_js() {
 	$current_theme = sanitize_title( wp_get_theme() );
 
 	$default_map_location      = whitemap_get_option('default_map_location');
+	
 	$map_pins                  = array(
 		array(
 			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker.png',
-			//'shadow' => get_stylesheet_directory_uri() . '/library/img/default_marker_shadow.png',
-			'shadow' => '',
+			// //'shadow' => get_stylesheet_directory_uri() . '/library/img/default_marker_shadow.png',
+			// 'shadow' => '',
 		)
 	);
+	
 	$map_layers                = array(
 		array(
 			'layer_url'         => 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png',
@@ -239,11 +241,12 @@ function whitemap_theme_option_js() {
 			'layer_opacity'     => '0.50',
 		),
 	);
-	$map_popups = array(
-		array(
-			'' => '',
-		),
-	);
+	
+	// $map_popups = array(
+	// 	array(
+	// 		'' => '',
+	// 	),
+	// );
 
 	// start the style block
 	$output = '<script type="text/javascript">' . "\n";
@@ -281,14 +284,16 @@ function whitemap_theme_option_js() {
 			$output .= 'WhiteMap.wmap_icon_' . $i . ' = L.Icon.extend({' . "\n";
 			$output .= 'options: {' . "\n";
 			$output .= 'iconUrl: "' . $pin['map_pin_image'] . '",' . "\n";
-			$output .= 'iconSize:     [64, 64],' . "\n";
-			$output .= 'iconAnchor:   [32, 64],' . "\n";
-			$output .= 'popupAnchor:  [0, -64],' . "\n";
-			if ( !empty($pin['shadow']) ) {
+			$output .= 'iconSize:     [32, 32],' . "\n";
+			$output .= 'iconAnchor:   [16, 32],' . "\n";
+			$output .= 'popupAnchor:  [16, 32],' . "\n";
+
+			if ( !empty($pin['shadow']) && isset($pin['shadow']) ) {
 				$output .= 'shadowUrl: "' . $pin['shadow'] . '",' . "\n";
+				$output .= 'shadowSize:   [50, 64],' . "\n";
+				$output .= 'shadowAnchor: [4, 62]' . "\n";
 			}
-			$output .= 'shadowSize:   [50, 64],' . "\n";
-			$output .= 'shadowAnchor: [4, 62]' . "\n";
+
 			$output .= '}' . "\n";
 			$output .= '});' . "\n";
 

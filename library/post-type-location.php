@@ -33,7 +33,7 @@ function post_type_location() {
 			'show_ui' => true,
 			'query_var' => true,
 			'menu_position' => 8, /* this is what order you want it to appear in on the left hand side menu */ 
-			'menu_icon' => get_stylesheet_directory_uri() . '/library/img/post-type-icon-location.png', /* the icon for the custom post type menu */
+			'menu_icon' => get_stylesheet_directory_uri() . '/library/img/admin_icon.png', /* the icon for the custom post type menu */
 			'rewrite'	=> array( 'slug' => 'location', 'with_front' => false ), /* you can specify its url slug */
 			'has_archive' => 'location', /* you can rename the slug here */
 			'capability_type' => 'post',
@@ -58,7 +58,7 @@ CUSTOM META BOXES for the LOCATION content type
 ***************************************************************************************/
 
 function cmb_initialize_cmb_meta_boxes() {
-	if ( ! class_exists( 'cmb_Meta_Box' ) ) {
+	if ( !class_exists( 'cmb_Meta_Box' ) ) {
 		require_once 'php/cmb/init.php';
 		require_once 'php/cmb/field_map/cmb-field-map.php';
 	}

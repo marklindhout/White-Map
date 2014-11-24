@@ -1,5 +1,5 @@
-// PALM STATE
 
+// PALM STATE
 
 #container, #menu {
 	display: inline;
@@ -9,7 +9,7 @@
 	display: block;
 	position: absolute;
 	background-color: #555;
-	width: 256px;
+	width: @menu_width;
 	height: 100%;
 	padding: 0;
 	margin: 0;
@@ -35,7 +35,7 @@
 }
 
 #container {
-    width: 100%;
+    width: @container_width;
     background-color: #fff;
     z-index: 5;
     position: fixed;
@@ -45,7 +45,15 @@
         moz-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
           o-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
             box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+    -webkit-transition: width 500ms ease, left 500ms ease;
+    transition: width 500ms ease, left 500ms ease;
 }
+
+#container.menu_shown {
+	left: @menu_width;
+	width: (@container_width - @menu_width);
+}
+
 
 #header {
 	z-index: 1;

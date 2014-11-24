@@ -23,11 +23,7 @@
 					</div>
 				</section>
 				<footer class="article-footer">
-					<p class="tags">
-						<?php echo get_the_term_list( get_the_ID(), 'location-type', '<span class="tags-title">' . __( 'Location Type:', 'whitemap' ) . '</span> ', ', ' ) ?>
-					</p>
 				</footer>
-
 				<?php comments_template(); ?>
 
 			</article>

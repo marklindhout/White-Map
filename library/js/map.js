@@ -84,7 +84,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	if ( $('#map-container').length !== 0 ) {
 		var json = $.parseJSON(whitemap.locations);
-		WhiteMap.mm_load( json, WhiteMap.wmap);
+		WhiteMap.mm_load(json, WhiteMap.wmap);
 		WhiteMap.get_location();
 	}
 });
