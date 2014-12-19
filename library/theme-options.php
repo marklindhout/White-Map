@@ -190,34 +190,34 @@ function whitemap_theme_option_css() {
 	$main_color = whitemap_get_option('main_color');
 	$site_logo  = whitemap_get_option('site_logo');
 
-	// start the style block
-	$output = '<style>' . "\n";
+	// start the style file
+	$css = '';
 
 	if ( !empty($site_logo) ) {
-		$output .= "\n" . '#header .logo {' . "\n";
-		$output .= 'background-image: url(' . $site_logo . ');' . "\n";
-		$output .= '}' . "\n";
+		$css .= "\n" . '#header .logo {' . "\n";
+		$css .= 'background-image: url(' . $site_logo . ');' . "\n";
+		$css .= '}' . "\n";
 	}
 
 	if ( !empty($main_color) ) {
-		$output .= "\n";
-		$output .= 'a, a:link, a:visited {' . "color: " . $main_color . "}";
-		$output .= "\n";
-		$output .= 'h1, h2, h3, h4, h5, h6 {' . "color: " . $main_color . "}";
-		$output .= "\n";
-		$output .= '.button {' . "background-color: " . $main_color . "}";
-		$output .= "\n";
-		$output .= '.brand {' . "background-color: " . $main_color . "}";
+		$css .= "\n";
+		$css .= 'a {' . "color: " . $main_color . "}";
+		$css .= "\n";
+		$css .= 'h1, h2, h3, h4, h5, h6 {' . "color: " . $main_color . "}";
+		$css .= "\n";
+		$css .= '.button {' . "background-color: " . $main_color . "}";
+		$css .= "\n";
+		$css .= '.brand {' . "background-color: " . $main_color . "}";
 	}
 
 	// end the style block
-	$output .= '</style>' . "\n";
+	$output = "\n" . '<link rel="stylesheet" id="whitemap-user-css" type="text/css" media="all" href="data:text/css;base64,' . base64_encode($css) . '" />' . "\n";
 
 	// Echo all to the front end
 	echo $output;
 
 }
-add_action('wp_head', 'whitemap_theme_option_css');
+add_action('wp_enqueue_scripts', 'whitemap_theme_option_css');
 
 
 function whitemap_theme_option_js() {
@@ -229,9 +229,14 @@ function whitemap_theme_option_js() {
 	$map_pins                  = array(
 		array(
 			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker.png',
-			// //'shadow' => get_stylesheet_directory_uri() . '/library/img/default_marker_shadow.png',
-			// 'shadow' => '',
-		)
+			'width'			=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker.png')[0],
+			'height'		=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker.png')[1],
+		),
+		array(
+			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker_active.png',
+			'width'			=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker_active.png')[0],
+			'height'		=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker_active.png')[1],
+		),
 	);
 	
 	$map_layers                = array(
@@ -242,16 +247,11 @@ function whitemap_theme_option_js() {
 		),
 	);
 	
-	// $map_popups = array(
-	// 	array(
-	// 		'' => '',
-	// 	),
-	// );
 
 	// start the style block
 	$output = '<script type="text/javascript">' . "\n";
 
-	$output .= 'var WhiteMap = WhiteMap || {};';
+	$output .= 'var WhiteMap = WhiteMap || {};' . "\n";
 
 	if ( !empty($default_map_location) ) {
 		$output .= 'WhiteMap.wmap = L.map("wmap", { center: new L.LatLng(' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '), zoom: 15 });' . "\n";
@@ -284,9 +284,9 @@ function whitemap_theme_option_js() {
 			$output .= 'WhiteMap.wmap_icon_' . $i . ' = L.Icon.extend({' . "\n";
 			$output .= 'options: {' . "\n";
 			$output .= 'iconUrl: "' . $pin['map_pin_image'] . '",' . "\n";
-			$output .= 'iconSize:     [32, 32],' . "\n";
-			$output .= 'iconAnchor:   [16, 32],' . "\n";
-			$output .= 'popupAnchor:  [16, 32],' . "\n";
+			$output .= 'iconSize:     [' . $pin['width'] . ', ' . $pin['height'] . '],' . "\n";
+			$output .= 'iconAnchor:   [' . $pin['width'] / 2 . ', ' . $pin['height'] . '],' . "\n";
+			$output .= 'popupAnchor:  [0, -6],' . "\n";
 
 			if ( !empty($pin['shadow']) && isset($pin['shadow']) ) {
 				$output .= 'shadowUrl: "' . $pin['shadow'] . '",' . "\n";
@@ -297,29 +297,10 @@ function whitemap_theme_option_js() {
 			$output .= '}' . "\n";
 			$output .= '});' . "\n";
 
-			$i += 1;
+			$i++;
 		}
 	}
 
-	// if ( !empty($map_popups) ) {
-
-	// 	$i = 0;
-
-	// 	foreach ($map_pins as $pin) {
-	// 		$output .= 'WhiteMap.wmap_popup = L.Popup.extend({' . "\n";
-	// 		$output .= 'options: {' . "\n";
-	// 		$output .= 'maxWidth: 640,' . "\n";
-	// 		$output .= 'minWidth: 320,' . "\n";
-	// 		$output .= 'autoPanPaddingTopLeft: "128px",' . "\n";
-	// 		$output .= '}' . "\n";
-	// 		$output .= '});' . "\n";
-
-	// 		$i += 1;
-	// 	}
-	// }
-
-
-	// end the style block
 	$output .= '</script>' . "\n";
 
 	// Echo all to the front end

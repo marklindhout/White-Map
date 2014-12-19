@@ -68,7 +68,7 @@
 				</div>
 				<?php
 					if ( is_user_logged_in() ) {
-						echo '<div class="admin_link cf"><a class="button" href="'.admin_url().'">'.__('Admin','whitemap').'</a></div>';
+						echo '<a class="admin_link button" href="'.admin_url().'">'.__('Admin','whitemap').'</a>';
 					}
 				?>
 			</header>

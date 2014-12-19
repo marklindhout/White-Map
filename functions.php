@@ -317,8 +317,7 @@ function whitemap_register_sidebars() {
 		'after_widget' => '</div>',
 		'before_title' => '<h4 class="widgettitle">',
 		'after_title' => '</h4>',
-		));
-
+	));
 }
 
 /********************************************************
@@ -353,11 +352,15 @@ function whitemap_json_location_feed() {
 		$ray = array();
 		
 		$ray['id']                              = $post->ID;
+		$ray['permalink']                        = get_permalink($post->ID);
 		$ray['date']                            = $post->post_date;
 		$ray['timestamp']                       = strtotime($post->post_date);
-		$ray['link']                            = $post->guid;
+		// $ray['link']                            = $post->guid;
 		$ray['title']                           = $post->post_title;
-		$ray['description']                     = $post->post_content;
+		$ray['description']                     = substr($post->post_content, 0, 200) . '…';
+		$ray['street']                          = get_post_meta($post->ID, 'whitemap_street_address', true);
+		$ray['postal']                          = get_post_meta($post->ID, 'whitemap_postal-code', true);
+		$ray['city']                            = get_post_meta($post->ID, 'whitemap_city', true);
 
 		$ray['latitude']  = floatval(get_post_meta($post->ID, 'whitemap_location_latitude', true));
 		$ray['longitude'] = floatval(get_post_meta($post->ID, 'whitemap_location_longitude', true));
@@ -367,6 +370,8 @@ function whitemap_json_location_feed() {
 		$json['posts'][]                        = $ray;
 	}
 	wp_reset_postdata();
+
+
 
 	return json_encode($json);
 

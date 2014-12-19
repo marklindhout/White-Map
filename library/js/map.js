@@ -6,6 +6,24 @@
 
 var WhiteMap = WhiteMap || {};
 
+
+/********************************************************
+ Popup definition
+*********************************************************/
+WhiteMap.wmap_popup = L.Popup.extend({
+	options: {
+		// maxWidth: 256,
+		minWidth: 320,
+		maxHeight: 256,
+		closeButton: true,
+		offset: [128,128],
+		// autoPanPaddingTopLeft: new L.Point(32,32),
+		autoPanPaddingBottomRight: new L.Point(0, 300),
+		className: "wmap_popup"
+	}
+});
+
+
 /********************************************************
 Build map overlays and place markers
 ********************************************************/
@@ -15,15 +33,38 @@ WhiteMap.mm_load = function (obj, map) {
 
 		var location = false;
 		var popup_text = "";
+		var popup = new WhiteMap.wmap_popup();
 		var lat = false;
 		var len = false;
 
 		if ( posts[j].hasOwnProperty('title') ) {
-			popup_text += '<h2>' + posts[j].title + '</h2>\n';
+			popup_text += '<h2 class="title">';
+			popup_text += '<a href="' + posts[j].permalink + '">';
+			popup_text += posts[j].title;
+			popup_text += '</a>\n';
+			popup_text += '</h2>\n';
+		}
+
+		if ( posts[j].hasOwnProperty('street') || posts[j].hasOwnProperty('postal') || posts[j].hasOwnProperty('city') ) {
+			popup_text += '<div class="address">';
+
+			if ( posts[j].hasOwnProperty('street') && posts[j].street ) {
+				popup_text += posts[j].street + '<span class="divider"> </span>';
+			}
+			
+			if ( posts[j].hasOwnProperty('postal') && posts[j].postal) {
+				popup_text += posts[j].postal + '<span class="divider"> </span>';
+			}
+
+			if ( posts[j].hasOwnProperty('city') && posts[j].city ) {
+				popup_text += posts[j].city;
+			}
+
+			popup_text += '</div>\n';
 		}
 
 		if ( posts[j].hasOwnProperty('description') ) {
-			popup_text += '<p>' + posts[j].description + '</p>\n';
+			popup_text += '<div class="description">' + posts[j].description + '</div>\n';
 		}
 
 		if ( posts[j].hasOwnProperty('latitude') ) {
@@ -38,10 +79,14 @@ WhiteMap.mm_load = function (obj, map) {
 			location = L.marker([lat, lng], { icon: new WhiteMap.wmap_icon_0() });
 		}
 		
-		location.bindPopup(popup_text);
+		popup.setContent(popup_text);
+		location.bindPopup(popup);
 		location.addTo(map);
+	
 	}
 };
+
+
 
 /********************************************************
  Geolocation functions

@@ -18,6 +18,7 @@ module.exports = function(grunt) {
 					strictImports: true,
 					strictMath: true,
 					report: 'gzip',
+					sourceMap: true,
 				},
 				files: {
 					'library/css/<%= pkg.name %>.min.css': ['library/less/<%= pkg.name %>.less'],
