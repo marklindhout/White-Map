@@ -17,10 +17,19 @@ WhiteMap.wmap_popup = L.Popup.extend({
 		maxHeight: 256,
 		closeButton: true,
 		offset: [128,128],
-		// autoPanPaddingTopLeft: new L.Point(32,32),
+		autoPanPaddingTopLeft: new L.Point(32,0),
 		autoPanPaddingBottomRight: new L.Point(0, 300),
 		className: "wmap_popup"
 	}
+});
+
+/********************************************************
+ Center marker definition
+*********************************************************/
+WhiteMap.center_marker_icon = new L.divIcon({
+	className: 'center_marker_icon',
+	iconSize: [24,24],
+	iconAnchor: [16,16],
 });
 
 
@@ -82,24 +91,30 @@ WhiteMap.mm_load = function (obj, map) {
 		popup.setContent(popup_text);
 		location.bindPopup(popup);
 		location.addTo(map);
-	
+
+		location.addEventListener('click', function () {
+			location.setIcon( new WhiteMap.wmap_icon_1() );
+		});
 	}
 };
-
-
 
 /********************************************************
  Geolocation functions
 *********************************************************/
 
-WhiteMap.get_location = function() {
+WhiteMap.set_current_location = function(map) {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function (pos) {
-			var ll = new L.LatLng(pos.coords.latitude, pos.coords.longitude);
-			WhiteMap.set_map_to(ll, WhiteMap.wmap);
-		}, function(pos) {
-			throw new Error('Geolocation error.');
-		});
+				var cl = new L.LatLng(pos.coords.latitude, pos.coords.longitude);
+				WhiteMap.current_location = cl;
+				WhiteMap.set_map_to(cl, map);
+				WhiteMap.set_center_marker(cl, map);
+				return cl;
+			}, function(pos) {
+				throw new Error('Geolocation error.');
+			}
+		);
+		
 	}
 	else {
 		throw new Error('Geolocation not supported by this browser.');
@@ -115,12 +130,19 @@ WhiteMap.set_map_to = function (latlng, map) {
 	}
 };
 
-$(document).ready(function() {
-	if ( $('#map-container').length !== 0 ) {
-		WhiteMap.get_location();
-	}
-});
+/********************************************************
+ Set center marker
+********************************************************/
 
+WhiteMap.set_center_marker = function (latlng, map) {
+	var location = L.marker( latlng, { icon: WhiteMap.center_marker_icon });
+	if (map) {
+		location.addTo(map).setZIndexOffset(1000);
+	}
+	else {
+		throw new Error('No map specified');
+	}
+};
 
 /********************************************************
  Load it all on DOM-Ready
@@ -128,8 +150,10 @@ $(document).ready(function() {
 
 $(document).ready(function() {
 	if ( $('#map-container').length !== 0 ) {
-		var json = $.parseJSON(whitemap.locations);
-		WhiteMap.mm_load(json, WhiteMap.wmap);
-		WhiteMap.get_location();
+		var map    = WhiteMap.wmap;
+		var json   = $.parseJSON(whitemap.locations);
+
+		WhiteMap.set_current_location(map);
+		WhiteMap.mm_load( json, map );
 	}
 });

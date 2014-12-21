@@ -6,6 +6,9 @@ module.exports = function(grunt) {
 
 		// Javascript Linting
 		jshint: {
+			options: {
+				loopfunc: true,
+			},
 			files: ['library/js/*.js', '!library/js/*.min.js'],
 		},
 
@@ -28,7 +31,8 @@ module.exports = function(grunt) {
 
 		uglify: {
 			options: {
-				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+				banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+				sourceMap: true,
 			},
 			build: {
 				src: '<%= jshint.files %>',

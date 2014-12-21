@@ -1,6 +1,4 @@
-
-// PALM STATE
-
+// Mobile-first base styling
 #container, #menu {
 	display: inline;
 }
@@ -12,9 +10,7 @@
 	height: 100%;
 	padding: 0;
 	margin: 0;
-	background-color: @colordark;
-	background-repeat: repeat;
-	background-position: left top;
+	background: @colordark url(../img/pattern-dark.png) repeat center center;
 	font-family: @fontcopy;
 	font-size: 0.85em;
 
@@ -22,7 +18,7 @@
 		z-index: 3;
 		display: block;
 		padding: 1em 1.5em;
-		border-bottom: 1px solid lighten(@colordark, 10%);
+		border-bottom: 1px solid lighten(@colordark, 20%);
 		margin-bottom: 1em;
 		color: @colorlight;
 		text-decoration: none;
@@ -36,23 +32,37 @@
 }
 
 #container {
-    width: @container_width;
-    background-color: #fff;
-    z-index: 5;
-    position: fixed;
-    left: 0px;
-    height: 100%;
-    -webkit-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
-        moz-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
-          o-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
-            box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
-    -webkit-transition: width 500ms ease, left 500ms ease;
-    transition: width 500ms ease, left 500ms ease;
+	width: @container_width;
+	background-color: #fff;
+	z-index: 5;
+	position: fixed;
+	left: 0px;
+	height: 100%;
+	-webkit-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+		moz-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+		  o-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+			box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+	-webkit-transition: width 500ms ease, left 500ms ease;
+	transition: width 500ms ease, left 500ms ease;
 
-    &.menu_shown {
-    	left: @menu_width;
-    	width: (@container_width - @menu_width);
-    }
+	overflow: auto;
+
+	&.menu_shown {
+		left: @menu_width;
+		width: (@container_width - @menu_width);
+	}
+
+	#content {
+		margin: 0 auto;
+		width: 100%;
+		max-width: @page_max_width;
+		padding: 4em;
+		font-family: @fontcopy;
+		color: @colormedium;
+		font-size: @fontsize_m;
+		line-height: 133%;
+	}
+
 }
 
 #header {
@@ -60,8 +70,8 @@
 	overflow: hidden;
 	height: 64px;
 	color: @colordark;
-	background: @colorlight url(../img/pattern-white.png) repeat center center;
-
+	background: @colorlight url(../img/pattern-light.png) repeat center center;
+	border-bottom: 2px solid lighten(@colorlight, 10%);
 
 	.logo {
 		line-height: 128px;
@@ -114,13 +124,4 @@
 
 	}
 
-}
-
-#map-container {
-	position: absolute;
-	z-index: 0;
-	top: 64px;
-	right: 0;
-	bottom: 0;
-	left: 0;
 }

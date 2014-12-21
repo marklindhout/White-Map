@@ -6,7 +6,6 @@ Author URI: http://www.marklindhout.com
 Version: 0.1.2
 ******************************************************************/
 
-
 // VARIABLES
 @import "variables";
 
@@ -28,15 +27,18 @@ Version: 0.1.2
 // HELPERS
 @import "helpers";
 
-// PALM
-@import "palm";
+// ELEMENTS
+@import "elements";
 
-// LAP
+// Mobile-first base styling
+@import "base";
+
+// LAP state (tablets, small laptops)
 @media only screen and (min-width: 1024px) {
 	@import 'lap';
 }
 
-// DESK
+// DESK state (laptops, desktops, and above)
 @media only screen and (min-width: 1200px) {
 	@import 'desk';	
 }

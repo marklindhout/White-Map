@@ -1,14 +1,17 @@
 <?php get_header(); ?>
+
 <div id="content">
 	<div id="inner-content" class="wrap cf">
-		<div id="main" class="m-all t-2of3 d-5of7 cf" role="main">
+		<div id="main" role="main">
 		
 		<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 			<article id="post-<?php the_ID(); ?>" <?php post_class('cf'); ?> role="article">
 				<header class="article-header">
 					<h1 class="single-title custom-post-type-title"><?php the_title(); ?></h1>
 				</header>
-				<div class="location-map"></div>
+				<div class="location-map">
+					<?php // map goes here ?>
+				</div>
 				<section class="entry-content cf">
 					<?php the_content(); ?>
 					<div class="location-info">
@@ -23,9 +26,6 @@
 						?></code></pre>
 					</div>
 				</section>
-				<footer class="article-footer">
-				</footer>
-				<?php comments_template(); ?>
 			</article>
 			<?php endwhile; ?>
 		<?php else : ?>
@@ -44,7 +44,6 @@
 
 		</div>
 	
-		<?php get_sidebar(); ?>
 	</div>
 </div>
 <?php get_footer(); ?>

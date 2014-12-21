@@ -203,7 +203,7 @@ function whitemap_theme_option_css() {
 		$css .= "\n";
 		$css .= 'a {' . "color: " . $main_color . "}";
 		$css .= "\n";
-		$css .= 'h1, h2, h3, h4, h5, h6 {' . "color: " . $main_color . "}";
+		$css .= '.single-title {' . "color: " . $main_color . "}";
 		$css .= "\n";
 		$css .= '.button {' . "background-color: " . $main_color . "}";
 		$css .= "\n";

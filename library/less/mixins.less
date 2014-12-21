@@ -1,9 +1,9 @@
 /* ==========================================================================
 BUTTON
 ========================================================================== */
-.button {
-	background: @colorbrand url(../img/pattern-red.png) repeat center center;
-	color: @colorlight;
+.button_base(@bgcolor: @colorbrand, @textcolor: @colorlight) {
+	background: @bgcolor url(../img/pattern-light.png) repeat center center;
+	color: @textcolor;
 	cursor: pointer;
 	display: inline-block;
 	font-family: @fontheadline;
@@ -18,7 +18,7 @@ BUTTON
 	text-shadow: 2px 2px 1px @colordark;
 
 	&:hover {
-		color: lighten(@colorlight, 50%);
+		color: lighten(@textcolor, 50%);
 		top: 1px;
 		left: 1px;
 	}
@@ -27,4 +27,12 @@ BUTTON
 		position: relative;
 		top: 1px;
 	}
+}
+
+.button {
+	.button_base();
+}
+
+.button_white {
+	.button_base(@colorlight, @colordark);
 }
