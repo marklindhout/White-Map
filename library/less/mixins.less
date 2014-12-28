@@ -1,6 +1,6 @@
-/* ==========================================================================
-BUTTON
-========================================================================== */
+/*****************************************************************************
+ BUTTON
+*****************************************************************************/
 .button_base(@bgcolor: @colorbrand, @textcolor: @colorlight) {
 	background: @bgcolor url(../img/pattern-light.png) repeat center center;
 	color: @textcolor;
@@ -35,4 +35,47 @@ BUTTON
 
 .button_white {
 	.button_base(@colorlight, @colordark);
+}
+
+/*****************************************************************************
+ PULSE ANIMATION (for map center marker)
+*****************************************************************************/
+
+.pulse() {
+	-webkit-animation: pulseanimation 1s linear infinite;
+	-moz-animation: pulseanimation 1s linear infinite;
+	-ms-animation: pulseanimation 1s linear infinite;
+	animation: pulseanimation 1s linear infinite;
+}
+
+.pulse_keyframes() {
+	0%, 20% {
+		background-color: fade(@colorbrand, 100%);
+		width: 12px;
+		height: 12px;
+		margin-left: -6px;
+		margin-top: -6px;
+	}
+
+	70%, 100% {
+		background-color: fade(@colorbrand, 0%);
+		width: 40px;
+		height: 40px;
+		margin-left: -20px;
+		margin-top: -20px;
+	}
+
+}
+
+@-webkit-keyframes pulseanimation {
+	.pulse_keyframes;
+}
+@-moz-keyframes pulseanimation {
+	.pulse_keyframes;
+}
+@-ms-keyframes pulseanimation {
+	.pulse_keyframes;
+}
+@keyframes pulseanimation {
+	.pulse_keyframes;
 }

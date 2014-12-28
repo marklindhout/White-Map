@@ -7,19 +7,14 @@
 				<header class="article-header">
 					<h1 class="single-title custom-post-type-title"><?php the_title(); ?></h1>
 				</header>
-				<div class="location-map"></div>
+
+				<div id="wmap">
+				</div>
+
 				<section class="entry-content cf">
 					<?php the_content(); ?>
 					<div class="location-info">
-						<pre style="padding: 0 1em;"><code><?php
-						$custom_fields = get_post_custom();
-
-						foreach ( $custom_fields as $field_key => $field_values ) {
-							foreach ( $field_values as $key => $value ) {
-								echo '<div><span style="opacity: 0.7">' .  $field_key . '</span>: <span>' . $value . '</span></div>';
-							}
-						}
-						?></code></pre>
+						
 					</div>
 				</section>
 				<footer class="article-footer">
@@ -42,8 +37,6 @@
 			</article>
 		<?php endif; ?>
 		</div>
-
-		<?php get_sidebar(); ?>
 	</div>
 </div>
 <?php get_footer(); ?>

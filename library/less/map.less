@@ -95,19 +95,15 @@
 	}
 
 	.center_marker_icon {
-		width: 24px;
-		height: 24px;
 		border-radius: 50%;
 		background-color: @colorbrand;
-		
-		-webkit-animation: pulse 1s ease-out;
-		-moz-animation: pulse 1s ease-out;
-		animation: pulse 1s ease-out;
-
-		-webkit-animation-iteration-count: infinite;
-		-moz-animation-iteration-count: infinite;
-		animation-iteration-count: infinite;
+		.pulse;
 
 	}
 
+}
+
+.location #wmap {
+	height: 256px;
+	width: 100%;
 }

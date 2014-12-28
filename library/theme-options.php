@@ -224,7 +224,20 @@ function whitemap_theme_option_js() {
 
 	$current_theme = sanitize_title( wp_get_theme() );
 
-	$default_map_location      = whitemap_get_option('default_map_location');
+	$default_map_location = whitemap_get_option('default_map_location');
+
+	if ( is_single() ) {
+		$single_lat = get_post_custom_values('whitemap_location_latitude')[0];
+		$single_lon = get_post_custom_values('whitemap_location_longitude')[0];
+		
+		if ( isset($single_lat) ) {
+			$default_map_location['latitude'] = $single_lat;
+		}
+
+		if ( isset($single_lon) ) {
+			$default_map_location['longitude'] = $single_lon;
+		}
+	}
 	
 	$map_pins                  = array(
 		array(
@@ -239,6 +252,7 @@ function whitemap_theme_option_js() {
 		),
 	);
 	
+
 	$map_layers                = array(
 		array(
 			'layer_url'         => 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png',
@@ -250,12 +264,8 @@ function whitemap_theme_option_js() {
 
 	// start the style block
 	$output = '<script type="text/javascript">' . "\n";
-
 	$output .= 'var WhiteMap = WhiteMap || {};' . "\n";
-
-	if ( !empty($default_map_location) ) {
-		$output .= 'WhiteMap.wmap = L.map("wmap", { center: new L.LatLng(' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '), zoom: 15 });' . "\n";
-	}
+	$output .= 'WhiteMap.wmap = L.map("wmap", { center: new L.LatLng(' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '), zoom: 15 });' . "\n";
 
 	// add the map layers
 	if ( !empty($map_layers) ) {
@@ -276,7 +286,7 @@ function whitemap_theme_option_js() {
 	}
 
 	// register the icons
-	if ( !empty($map_pins) ) {
+	if ( !empty($map_pins)) {
 
 		$i = 0;
 
@@ -287,18 +297,19 @@ function whitemap_theme_option_js() {
 			$output .= 'iconSize:     [' . $pin['width'] . ', ' . $pin['height'] . '],' . "\n";
 			$output .= 'iconAnchor:   [' . $pin['width'] / 2 . ', ' . $pin['height'] . '],' . "\n";
 			$output .= 'popupAnchor:  [0, -6],' . "\n";
-
-			if ( !empty($pin['shadow']) && isset($pin['shadow']) ) {
-				$output .= 'shadowUrl: "' . $pin['shadow'] . '",' . "\n";
-				$output .= 'shadowSize:   [50, 64],' . "\n";
-				$output .= 'shadowAnchor: [4, 62]' . "\n";
-			}
-
 			$output .= '}' . "\n";
 			$output .= '});' . "\n";
 
 			$i++;
 		}
+	}
+
+	if ( is_single() ) {
+		$output .= 'var marker = L.marker([' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '], { icon: new WhiteMap.wmap_icon_1() });';
+		$output .= 'marker.addTo(WhiteMap.wmap);';
+		$output .= 'WhiteMap.wmap.dragging.disable();';
+		$output .= 'WhiteMap.wmap.keyboard.disable();';
+
 	}
 
 	$output .= '</script>' . "\n";
