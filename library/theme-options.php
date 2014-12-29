@@ -222,36 +222,48 @@ add_action('wp_enqueue_scripts', 'whitemap_theme_option_css');
 
 function whitemap_theme_option_js() {
 
-	$current_theme = sanitize_title( wp_get_theme() );
-
+	// if the default location is set in theme settings, load it here.
 	$default_map_location = whitemap_get_option('default_map_location');
 
+	// for single locations we override the default location
 	if ( is_single() ) {
-		$single_lat = get_post_custom_values('whitemap_location_latitude')[0];
-		$single_lon = get_post_custom_values('whitemap_location_longitude')[0];
-		
-		if ( isset($single_lat) ) {
-			$default_map_location['latitude'] = $single_lat;
+		$single_lat = get_post_custom_values('whitemap_location_latitude');
+		$single_lon = get_post_custom_values('whitemap_location_longitude');
+
+		if ( isset($single_lat[0]) ) {
+			$default_map_location['latitude'] = $single_lat[0];
 		}
 
-		if ( isset($single_lon) ) {
-			$default_map_location['longitude'] = $single_lon;
+		if ( isset($single_lon[0]) ) {
+			$default_map_location['longitude'] = $single_lon[0];
 		}
 	}
-	
-	$map_pins                  = array(
+
+	// if none of the above work, default to something sensible, in this case Berlin, Germany.
+	if (!isset($default_map_location['latitude'])) {
+		$default_map_location['latitude'] = '52.51202';
+	}
+
+	if (!isset($default_map_location['longitude'])) {
+		$default_map_location['longitude'] = '13.40891';
+	}
+
+	// Load marker sizes into a temp var first, otherwise PHP <5.3 will be a  whiny little bitch.
+	$default_marker_size = getimagesize( get_stylesheet_directory() . '/library/img/default_marker.png');
+	$default_marker_active_size = getimagesize( get_stylesheet_directory() . '/library/img/default_marker.png');
+
+	$map_pins = array(
 		array(
 			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker.png',
-			'width'			=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker.png')[0],
-			'height'		=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker.png')[1],
+			'width'			=> $default_marker_size[0],
+			'height'		=> $default_marker_size[1],
 		),
 		array(
 			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker_active.png',
-			'width'			=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker_active.png')[0],
-			'height'		=> getimagesize(get_stylesheet_directory() . '/library/img/default_marker_active.png')[1],
+			'width'			=> $default_marker_active_size[0],
+			'height'		=> $default_marker_active_size[1],
 		),
 	);
-	
 
 	$map_layers                = array(
 		array(
