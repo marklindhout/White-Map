@@ -1,16 +1,30 @@
 /*
- name: Whitemap.LocationsLoader
+ name: map.js
  Author: Mark P. Lindhout
  Date: 2014-11-22T17:59:27+01:00
 */
 
 var WhiteMap = WhiteMap || {};
 
+/********************************************************
+ CENTER LOCATION
+*********************************************************/
+WhiteMap.center = new L.LatLng(WhiteMap.map_default_location.latitude, WhiteMap.map_default_location.longitude);
+
 
 /********************************************************
- Popup definition
+ MAP
 *********************************************************/
-WhiteMap.wmap_popup = L.Popup.extend({
+WhiteMap.map = L.map("wmap", {
+	center: WhiteMap.center,
+	zoom: 15
+});
+
+
+/********************************************************
+ POPUP
+*********************************************************/
+WhiteMap.map_popup = L.Popup.extend({
 	options: {
 		// maxWidth: 256,
 		minWidth: 320,
@@ -23,17 +37,48 @@ WhiteMap.wmap_popup = L.Popup.extend({
 	}
 });
 
+/********************************************************
+ MAP LAYER
+*********************************************************/
+WhiteMap.map_layer = L.tileLayer(WhiteMap.map_layer.url, {
+	attribution: WhiteMap.map_layer.attribution,
+	opacity: WhiteMap.map_layer.opacity
+})
+.addTo(WhiteMap.map);
+
 
 /********************************************************
- Center marker definition
+ CENTER MARKER
 *********************************************************/
 WhiteMap.center_marker_icon = new L.divIcon({
 	className: 'center_marker_icon',
 });
 
+/********************************************************
+ NORMAL MARKER
+*********************************************************/
+WhiteMap.marker_normal = L.Icon.extend({
+	options: {
+		iconUrl:     WhiteMap.map_marker_normal.url,
+		iconSize:    [WhiteMap.map_marker_normal.width, WhiteMap.map_marker_normal.height],
+		iconAnchor:  [parseInt(WhiteMap.map_marker_normal.width/2, 10), WhiteMap.map_marker_normal.height],
+	}
+});
 
 /********************************************************
- Collect all markers into this array
+ ACTIVE MARKER
+*********************************************************/
+WhiteMap.marker_active = L.Icon.extend({
+	options: {
+		iconUrl:     WhiteMap.map_marker_active.url,
+		iconSize:    [WhiteMap.map_marker_active.width, WhiteMap.map_marker_active.height],
+		iconAnchor:  [parseInt(WhiteMap.map_marker_active.width/2, 10), WhiteMap.map_marker_active.height],
+	}
+});
+
+
+/********************************************************
+ MARKERS ARRAY
 *********************************************************/
 WhiteMap.all_markers = [];
 
@@ -41,15 +86,15 @@ WhiteMap.all_markers = [];
 /********************************************************
 Build map overlays and place markers
 ********************************************************/
-WhiteMap.mm_load = function (obj, map) {
+WhiteMap.load_locations = function () {
 
-	posts = obj.posts;
+	var posts = WhiteMap.locations.posts;
 	
 	for (var j = 0; j < posts.length; j++) {
 
 		var location = false;
 		var popup_text = "";
-		var popup = new WhiteMap.wmap_popup();
+		var popup = new WhiteMap.map_popup();
 		var lat = false;
 		var len = false;
 
@@ -92,12 +137,12 @@ WhiteMap.mm_load = function (obj, map) {
 		}
 		
 		if (lat || lng) {
-			location = L.marker([lat, lng], { icon: new WhiteMap.wmap_icon_0() });
+			location = L.marker([lat, lng], { icon: new WhiteMap.marker_normal() });
 		}
 		
 		popup.setContent(popup_text);
 		location.bindPopup(popup);
-		location.addTo(map);
+		location.addTo(WhiteMap.map);
 
 		WhiteMap.all_markers.push(location);
 	}
@@ -106,55 +151,28 @@ WhiteMap.mm_load = function (obj, map) {
 
 
 /********************************************************
- Geolocation functions
+ GEOLOCATION
 *********************************************************/
 
-WhiteMap.set_current_location = function(map) {
-	// if (navigator.geolocation) {
-	// 	navigator.geolocation.getCurrentPosition(function (pos) {
-	// 			var cl = new L.LatLng(pos.coords.latitude, pos.coords.longitude);
-	// 			WhiteMap.current_location = cl;
-	// 			WhiteMap.set_map_to(cl, map);
-	// 			WhiteMap.set_center_marker(cl, map);
-	// 			return cl;
-	// 		}, function(pos) {
-	// 			throw new Error('Geolocation error.');
-	// 		}
-	// 	);
-		
-	// }
-	// else {
-	// 	throw new Error('Geolocation not supported by this browser.');
-	// }
-
-	map.locate();
+WhiteMap.get_geolocation = function() {
+	WhiteMap.map.locate({setView: true, maxZoom: 16});
+	WhiteMap.map.on('locationfound', WhiteMap.map_handle_locationfound);
+	WhiteMap.map.on('locationerror', WhiteMap.map_handle_locationerror);
 };
 
-WhiteMap.set_map_to = function (latlng, map) {
-	if (map) {
-		map.panTo(latlng);
-	}
-	else {
-		throw new Error('No map specified');
-	}
+WhiteMap.map_handle_locationfound = function (e) {
+	WhiteMap.set_geolocation_marker(e.latlng);
 };
 
+WhiteMap.map_handle_locationerror = function (e) {
+	console.error('No geolocation found!');
+};
 
-
-/********************************************************
- Set center marker
-********************************************************/
-
-WhiteMap.set_center_marker = function (latlng, map) {
+WhiteMap.set_geolocation_marker = function (latlng) {
 	var location = L.marker( latlng, { icon: WhiteMap.center_marker_icon });
-	if (map) {
-		location.addTo(map).setZIndexOffset(1000);
-	}
-	else {
-		throw new Error('No map specified');
-	}
-};
 
+	location.addTo(WhiteMap.map).setZIndexOffset(1000);
+};
 
 /********************************************************
  Reset all markers on map click
@@ -163,7 +181,7 @@ WhiteMap.set_center_marker = function (latlng, map) {
 WhiteMap.reset_all_markers = function () {
 	for (var markeri = 0; markeri < WhiteMap.all_markers.length; markeri++) {
 		var location = WhiteMap.all_markers[markeri];
-		location.setIcon( new WhiteMap.wmap_icon_0() );
+		location.setIcon( new WhiteMap.marker_normal() );
 	}
 };
 
@@ -178,7 +196,7 @@ WhiteMap.markers_event_handlers = function () {
 
 		location.addEventListener('click', function () {
 			WhiteMap.reset_all_markers();
-			this.setIcon( new WhiteMap.wmap_icon_1() );
+			this.setIcon( new WhiteMap.marker_active() );
 		});
 
 	}
@@ -191,17 +209,15 @@ WhiteMap.markers_event_handlers = function () {
 $(document).ready(function() {
 	if ( $('body').hasClass('home') ) {
 		if ( $('#map-container').length !== 0 ) {
-			var map    = WhiteMap.wmap;
-			var json   = $.parseJSON(whitemap.locations);
 
-			WhiteMap.set_current_location(map);
-			WhiteMap.mm_load( json, map );
+			WhiteMap.get_geolocation();
+			WhiteMap.load_locations();
 
 			WhiteMap.markers_event_handlers();
 			WhiteMap.reset_all_markers();
 
-			map.addEventListener('click', function () {
-				WhiteMap.reset_all_markers(this);
+			WhiteMap.map.addEventListener('click', function () {
+				WhiteMap.reset_all_markers();
 			});
 		}
 	}

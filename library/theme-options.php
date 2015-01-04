@@ -220,108 +220,17 @@ function whitemap_theme_option_css() {
 add_action('wp_enqueue_scripts', 'whitemap_theme_option_css');
 
 
+
 function whitemap_theme_option_js() {
 
-	// if the default location is set in theme settings, load it here.
-	$default_map_location = whitemap_get_option('default_map_location');
-
-	// for single locations we override the default location
-	if ( is_single() ) {
-		$single_lat = get_post_custom_values('whitemap_location_latitude');
-		$single_lon = get_post_custom_values('whitemap_location_longitude');
-
-		if ( isset($single_lat[0]) ) {
-			$default_map_location['latitude'] = $single_lat[0];
-		}
-
-		if ( isset($single_lon[0]) ) {
-			$default_map_location['longitude'] = $single_lon[0];
-		}
-	}
-
-	// if none of the above work, default to something sensible, in this case Berlin, Germany.
-	if (!isset($default_map_location['latitude'])) {
-		$default_map_location['latitude'] = '52.51202';
-	}
-
-	if (!isset($default_map_location['longitude'])) {
-		$default_map_location['longitude'] = '13.40891';
-	}
-
-	// Load marker sizes into a temp var first, otherwise PHP <5.3 will be a  whiny little bitch.
-	$default_marker_size = getimagesize( get_stylesheet_directory() . '/library/img/default_marker.png');
-	$default_marker_active_size = getimagesize( get_stylesheet_directory() . '/library/img/default_marker.png');
-
-	$map_pins = array(
-		array(
-			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker.png',
-			'width'			=> $default_marker_size[0],
-			'height'		=> $default_marker_size[1],
-		),
-		array(
-			'map_pin_image' => get_stylesheet_directory_uri() . '/library/img/default_marker_active.png',
-			'width'			=> $default_marker_active_size[0],
-			'height'		=> $default_marker_active_size[1],
-		),
-	);
-
-	$map_layers                = array(
-		array(
-			'layer_url'         => 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png',
-			'layer_attribution' => '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-			'layer_opacity'     => '0.50',
-		),
-	);
-	
-
-	// start the style block
 	$output = '<script type="text/javascript">' . "\n";
-	$output .= 'var WhiteMap = WhiteMap || {};' . "\n";
-	$output .= 'WhiteMap.wmap = L.map("wmap", { center: new L.LatLng(' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '), zoom: 15 });' . "\n";
-
-	// add the map layers
-	if ( !empty($map_layers) ) {
-		
-		$i = 0;
-
-		foreach ($map_layers as $layer) {
-			$output .= 'WhiteMap.wmap_layer_' . $i . ' = L.tileLayer("' . $layer['layer_url'] . '",' . "\n";
-			$output .= '{' . "\n";
-			if ( !empty($layer['layer_attribution']) ) {
-				$output .= 'attribution: "' . addslashes($layer['layer_attribution']) . '",' . "\n";
-			}
-			$output .= 'opacity: ' . $layer['layer_opacity'];
-			$output .= '}).addTo(WhiteMap.wmap);' . "\n";
-
-			$i += 1;
-		}
-	}
-
-	// register the icons
-	if ( !empty($map_pins)) {
-
-		$i = 0;
-
-		foreach ($map_pins as $pin) {
-			$output .= 'WhiteMap.wmap_icon_' . $i . ' = L.Icon.extend({' . "\n";
-			$output .= 'options: {' . "\n";
-			$output .= 'iconUrl: "' . $pin['map_pin_image'] . '",' . "\n";
-			$output .= 'iconSize:     [' . $pin['width'] . ', ' . $pin['height'] . '],' . "\n";
-			$output .= 'iconAnchor:   [' . $pin['width'] / 2 . ', ' . $pin['height'] . '],' . "\n";
-			$output .= 'popupAnchor:  [0, -6],' . "\n";
-			$output .= '}' . "\n";
-			$output .= '});' . "\n";
-
-			$i++;
-		}
-	}
+	$output = 'var WhiteMap = WhiteMap || {};' . "\n";
 
 	if ( is_single() ) {
-		$output .= 'var marker = L.marker([' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '], { icon: new WhiteMap.wmap_icon_1() });';
-		$output .= 'marker.addTo(WhiteMap.wmap);';
-		$output .= 'WhiteMap.wmap.dragging.disable();';
-		$output .= 'WhiteMap.wmap.keyboard.disable();';
-
+		$output .= 'var marker = L.marker([' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '], { icon: new WhiteMap.map_icon_1() });';
+		$output .= 'marker.addTo(WhiteMap.map);';
+		$output .= 'WhiteMap.map.dragging.disable();';
+		$output .= 'WhiteMap.map.keyboard.disable();';
 	}
 
 	$output .= '</script>' . "\n";
@@ -330,4 +239,4 @@ function whitemap_theme_option_js() {
 	echo $output;
 
 }
-add_action('wp_footer', 'whitemap_theme_option_js');
+add_action('wp_footer', 'whitemap_theme_option_js', 100);

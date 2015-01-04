@@ -163,12 +163,15 @@ function whitemap_scripts_and_styles() {
 
 		wp_localize_script(
 			'whitemap',							// handle
-			'whitemap',							// name
+			'WhiteMap',							// name
 			array(								// data
-				'locations' => whitemap_json_location_feed(),
+				'locations' => whitemap_get_locations(),
+				'map_default_location' => whitemap_get_default_map_location(),
+				'map_layer'     => whitemap_get_map_layer(),
+				'map_marker_normal' => whitemap_get_map_marker(),
+				'map_marker_active' => whitemap_get_map_marker('active'),
 			)
 		);
-
 	}
 }
 
@@ -326,8 +329,104 @@ WHITE MAP
 require_once( 'library/post-type-location.php' );
 require_once( 'library/theme-options.php' );
 
+
+// DEFAULT MAP LOCATION
+function whitemap_get_default_map_location($type) {
+
+	// if the default location is set in theme settings, load it here.
+	$default_map_location = whitemap_get_option('default_map_location');
+
+	// for single locations we override the default location
+	if ( is_single() ) {
+		$single_lat = get_post_custom_values('whitemap_location_latitude');
+		$single_lon = get_post_custom_values('whitemap_location_longitude');
+
+		if ( isset($single_lat[0]) ) {
+			$default_map_location['latitude'] = $single_lat[0];
+		}
+
+		if ( isset($single_lon[0]) ) {
+			$default_map_location['longitude'] = $single_lon[0];
+		}
+	}
+
+	// if none of the above work, default to something sensible, in this case Berlin, Germany.
+	if (!isset($default_map_location['latitude'])) {
+		$default_map_location['latitude'] = '52.51202';
+	}
+
+	if (!isset($default_map_location['longitude'])) {
+		$default_map_location['longitude'] = '13.40891';
+	}
+
+	return $default_map_location;
+}
+
+
+// DEFAULT MAP LAYER
+function whitemap_get_map_layer($type) {
+
+	// Default to returning the url
+	if ( !isset($type) ) {
+		$type = 'default';
+	}
+
+	// Available map layers. Can be replaced by a function that extracts layers from theme options.
+	$map_layers = array(
+		'default' => array(
+			'url'         => 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png',
+			'attribution' => '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+			'opacity'     => '1.0',
+		),
+	);
+
+	// Return the requested option if it exists
+	if ( !empty($map_layers[$type]) ) {
+		return $map_layers[$type];
+	} else {
+		return false;
+	}
+	
+}
+
+
+// DEFAULT MAP LOCATION MARKERS
+function whitemap_get_map_marker($type) {
+	
+	// Default to returning the normal marker
+	if ( !isset($type) ) {
+		$type = 'normal';
+	}
+
+	// Load marker sizes into a temp var first, otherwise PHP <5.3 will be a  whiny little bitch.
+	$default_marker_size = getimagesize( get_stylesheet_directory() . '/library/img/default_marker.png');
+	$default_marker_active_size = getimagesize( get_stylesheet_directory() . '/library/img/default_marker.png');
+
+	// The markers
+	$map_markers = array(
+		'normal' => array(
+			'url'    => get_stylesheet_directory_uri() . '/library/img/default_marker.png',
+			'width'  => $default_marker_size[0],
+			'height' => $default_marker_size[1],
+		),
+		'active' => array(
+			'url'    => get_stylesheet_directory_uri() . '/library/img/default_marker_active.png',
+			'width'  => $default_marker_active_size[0],
+			'height' => $default_marker_active_size[1],
+		),
+	);
+
+	// Return the requested type if it exists
+	if ( !empty($map_markers[$type]) ) {
+		return $map_markers[$type];
+	} else {
+		return false;
+	}
+}
+
+
 // JSON Location feed
-function whitemap_json_location_feed() {
+function whitemap_get_locations() {
 
 	global $wpdb;
 
@@ -371,8 +470,5 @@ function whitemap_json_location_feed() {
 	}
 	wp_reset_postdata();
 
-
-
-	return json_encode($json);
-
+	return $json;
 }
