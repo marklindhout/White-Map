@@ -161,7 +161,7 @@ WhiteMap.add_markers = function () {
 *********************************************************/
 
 WhiteMap.get_geolocation = function() {
-	WhiteMap.map.locate({setView: true, maxZoom: 16});
+	WhiteMap.map.locate({setView: true});
 	WhiteMap.map.on('locationfound', WhiteMap.map_handle_locationfound);
 	WhiteMap.map.on('locationerror', WhiteMap.map_handle_locationerror);
 };

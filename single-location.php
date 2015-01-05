@@ -6,6 +6,23 @@
 			<article id="post-<?php the_ID(); ?>" <?php post_class('cf'); ?> role="article">
 				<header class="article-header">
 					<h1 class="single-title custom-post-type-title"><?php the_title(); ?></h1>
+					<address class="address">
+						<span class="street">
+							<?php echo get_post_meta(get_the_id(), 'whitemap_street_address', true); ?>
+						</span>
+						<span class="divider"></span>
+						<span class="postal">
+							<?php echo get_post_meta(get_the_id(), 'whitemap_postal-code', true); ?>
+						</span>
+						<span class="divider"></span>
+						<span class="city">
+							<?php echo get_post_meta(get_the_id(), 'whitemap_city', true); ?>
+						</span>
+					</address>
+					<div class="rating_display" data-rating="<?php echo whitemap_get_rating_average(get_the_id()); ?>">
+						<div class="inner" style="width: <?php echo whitemap_get_rating_average(get_the_id()) * 20; ?>%;"></div>
+					</div>
+					<?php echo whitemap_get_rating_count(get_the_id()); ?> ratings
 				</header>
 
 				<div id="wmap">
@@ -13,13 +30,8 @@
 
 				<section class="entry-content cf">
 					<?php the_content(); ?>
-					<div class="location-info">
-						
-					</div>
+					<?php comments_template(); ?>
 				</section>
-				<footer class="article-footer">
-				</footer>
-				<?php comments_template(); ?>
 
 			</article>
 			<?php endwhile; ?>

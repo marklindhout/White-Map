@@ -1,0 +1,85 @@
+@star_size: 32px;
+
+.rating_display {
+	display: block;
+	width: (5 * @star_size);
+	height: @star_size;
+	background: transparent url(../img/rating-stars.png) repeat left -64px;
+
+	.inner {
+		display: block;
+		height: @star_size;
+		background: transparent url(../img/rating-stars.png) repeat left -32px;
+	}
+}
+
+.rating_execute {
+	display: inline-block;
+	position: relative;
+	width: (5 * @star_size);
+	height: @star_size;
+	background: transparent url(../img/rating-stars.png) repeat left bottom;
+	vertical-align: bottom;
+
+	.star {
+		display: block;
+		float: left;
+		width: @star_size;
+		height: @star_size;
+		opacity: 0.3;
+		background: red url(../img/rating-stars.png) repeat left -32px;
+
+		&:before {
+			position: absolute;
+			opacity: 1;
+			display: block;
+			float: left;
+			width: @star_size;
+			height: @star_size;
+			background-color: red;
+		}
+	}
+}
+
+
+
+#hide {
+	display:none;
+}
+ 
+.rating {
+	input {
+		display: inline-block;
+		width: @star_size;
+		height: @star_size;
+		line-height: @star_size;
+		position: absolute;
+		filter: alpha(opacity=0);
+		-moz-opacity: 0;
+		-khtml-opacity :0;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	span {
+		display: inline-block;
+		width: @star_size;
+		height: @star_size;
+		line-height: @star_size;
+		padding: 0;
+		background: url(../img/rating-stars.png) no-repeat left 0px;
+	}
+
+	/* Change span immediately following the checked radio */
+
+	input:checked + span {
+		background-position: left 0;
+	}
+
+	/* Reset all remaining stars back to default background.
+	   This supersedes the above due to its ordering. */
+
+	input:checked + span ~ span {
+		background-position: left -64px;
+	}
+}
