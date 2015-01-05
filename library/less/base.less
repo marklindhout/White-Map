@@ -56,11 +56,20 @@
 		margin: 0 auto;
 		width: 100%;
 		max-width: @page_max_width;
-		padding: 4em;
 		font-family: @fontcopy;
 		color: @colormedium;
 		font-size: @fontsize_m;
 		line-height: 133%;
+
+		.hentry {
+			.article-header {
+				padding: 1em 4em;
+			}
+			
+			.entry-content {
+				padding: 1em 4em;
+			}
+		}
 	}
 
 }

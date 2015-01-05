@@ -46,23 +46,23 @@
 	-moz-animation: pulseanimation 1s linear infinite;
 	-ms-animation: pulseanimation 1s linear infinite;
 	animation: pulseanimation 1s linear infinite;
+	width: 100%;
+	height: 100%;
 }
 
 .pulse_keyframes() {
-	0%, 20% {
-		background-color: fade(@colorbrand, 100%);
-		width: 12px;
-		height: 12px;
-		margin-left: -6px;
-		margin-top: -6px;
+	0%, 50% {
+		background-color: fade(@colorbrand, 75%);
+		margin: 0;
+		width: 100%;
+		height: 100%;
 	}
 
-	70%, 100% {
+	100% {
 		background-color: fade(@colorbrand, 0%);
-		width: 40px;
-		height: 40px;
-		margin-left: -20px;
-		margin-top: -20px;
+		margin: -50%;
+		width: 200%;
+		height: 200%;
 	}
 
 }

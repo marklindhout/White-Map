@@ -131,7 +131,7 @@ function whitemap_scripts_and_styles() {
 
 		wp_enqueue_style(
 			'whitemap',
-			get_stylesheet_directory_uri() . '/library/css/white-map.min.css',
+			get_stylesheet_directory_uri() . '/library/css/whitemap.min.css',
 			array(),
 			'',
 			'all'
@@ -155,7 +155,7 @@ function whitemap_scripts_and_styles() {
 
 		wp_enqueue_script(
 			'whitemap',
-			get_stylesheet_directory_uri() . '/library/js/white-map.min.js',
+			get_stylesheet_directory_uri() . '/library/js/whitemap.min.js',
 			array( 'jquery' ),
 			'',
 			true // in footer ?
@@ -165,11 +165,11 @@ function whitemap_scripts_and_styles() {
 			'whitemap',							// handle
 			'WhiteMap',							// name
 			array(								// data
-				'locations' => whitemap_get_locations(),
 				'map_default_location' => whitemap_get_default_map_location(),
-				'map_layer'     => whitemap_get_map_layer(),
-				'map_marker_normal' => whitemap_get_map_marker(),
-				'map_marker_active' => whitemap_get_map_marker('active'),
+				'locations'            => whitemap_get_locations(),
+				'map_layer'            => whitemap_get_map_layer('default'),
+				'map_marker_normal'    => whitemap_get_map_marker('normal'),
+				'map_marker_active'    => whitemap_get_map_marker('active'),
 			)
 		);
 	}
@@ -331,31 +331,31 @@ require_once( 'library/theme-options.php' );
 
 
 // DEFAULT MAP LOCATION
-function whitemap_get_default_map_location($type) {
+function whitemap_get_default_map_location() {
 
 	// if the default location is set in theme settings, load it here.
 	$default_map_location = whitemap_get_option('default_map_location');
 
 	// for single locations we override the default location
-	if ( is_single() ) {
+	if ( is_single() && get_post_type() == 'location' ) {
 		$single_lat = get_post_custom_values('whitemap_location_latitude');
 		$single_lon = get_post_custom_values('whitemap_location_longitude');
 
-		if ( isset($single_lat[0]) ) {
+		if ( !empty($single_lat[0]) || !isset($single_lat[0])) {
 			$default_map_location['latitude'] = $single_lat[0];
 		}
 
-		if ( isset($single_lon[0]) ) {
+		if ( !empty($single_lon[0]) || !isset($single_lon[0])) {
 			$default_map_location['longitude'] = $single_lon[0];
 		}
 	}
 
 	// if none of the above work, default to something sensible, in this case Berlin, Germany.
-	if (!isset($default_map_location['latitude'])) {
+	if (empty($default_map_location['latitude'])) {
 		$default_map_location['latitude'] = '52.51202';
 	}
 
-	if (!isset($default_map_location['longitude'])) {
+	if (empty($default_map_location['longitude'])) {
 		$default_map_location['longitude'] = '13.40891';
 	}
 
@@ -442,33 +442,30 @@ function whitemap_get_locations() {
 		)
 	);
 
-	$json = array();
-
-	$json['err'] = false;
+	$locations = array();
 
 	foreach ($posts_query->posts as $post) {
 
-		$ray = array();
-		
-		$ray['id']                              = $post->ID;
-		$ray['permalink']                        = get_permalink($post->ID);
-		$ray['date']                            = $post->post_date;
-		$ray['timestamp']                       = strtotime($post->post_date);
-		// $ray['link']                            = $post->guid;
-		$ray['title']                           = $post->post_title;
-		$ray['description']                     = substr($post->post_content, 0, 200) . '…';
-		$ray['street']                          = get_post_meta($post->ID, 'whitemap_street_address', true);
-		$ray['postal']                          = get_post_meta($post->ID, 'whitemap_postal-code', true);
-		$ray['city']                            = get_post_meta($post->ID, 'whitemap_city', true);
-
-		$ray['latitude']  = floatval(get_post_meta($post->ID, 'whitemap_location_latitude', true));
-		$ray['longitude'] = floatval(get_post_meta($post->ID, 'whitemap_location_longitude', true));
-				
-		// New if <= 5 days ago
-		$ray['new']                             = date('U') - $ray['timestamp'] <= 60 * 60 * 24 * 5;
-		$json['posts'][]                        = $ray;
+			$ray = array();
+			
+			$ray['id']          = $post->ID;
+			$ray['permalink']   = get_permalink($post->ID);
+			$ray['date']        = $post->post_date;
+			$ray['timestamp']   = strtotime($post->post_date);
+			$ray['title']       = $post->post_title;
+			$ray['description'] = substr($post->post_content, 0, 200) . '…';
+			$ray['street']      = get_post_meta($post->ID, 'whitemap_street_address', true);
+			$ray['postal']      = get_post_meta($post->ID, 'whitemap_postal-code', true);
+			$ray['city']        = get_post_meta($post->ID, 'whitemap_city', true);
+			
+			$ray['latitude']    = floatval(get_post_meta($post->ID, 'whitemap_location_latitude', true));
+			$ray['longitude']   = floatval(get_post_meta($post->ID, 'whitemap_location_longitude', true));
+			
+			// New if < 5 days ago
+			$ray['new']         = date('U') - $ray['timestamp'] <= 60 * 60 * 24 * 5;
+			$locations[]        = $ray;
 	}
 	wp_reset_postdata();
 
-	return $json;
+	return $locations;
 }

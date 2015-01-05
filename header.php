@@ -13,14 +13,40 @@
 		<meta name="MobileOptimized" content="320">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
-		<link rel="apple-touch-icon-precomposed" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
-		<link rel="icon" href="<?php echo whitemap_get_option('favicon_png'); ?>">
-		<!--[if IE]><link rel="shortcut icon" href="<?php echo whitemap_get_option('favicon'); ?>"><![endif]-->
-		
+		<?php
+			if (!empty(whitemap_get_option('apple_touch_icon'))) {
+			?>
+				<link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
+				<link rel="apple-touch-icon-precomposed" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
+			<?php
+			}
+
+			if (!empty(whitemap_get_option('favicon_png'))) {
+			?>
+				<link rel="icon" href="<?php echo whitemap_get_option('favicon_png'); ?>">
+			<?php
+			}
+
+			if (!empty(whitemap_get_option('favicon'))) {
+			?>
+				<!--[if IE]><link rel="shortcut icon" href="<?php echo whitemap_get_option('favicon'); ?>"><![endif]-->
+			<?php
+			}
+			
+			if (!empty(whitemap_get_option('main_color'))) {
+			?>
+				<meta name="msapplication-TileColor" content="<?php echo whitemap_get_option('main_color'); ?>">
+			<?php
+			}
+			
+			if (!empty(whitemap_get_option('windows_tile_icon'))) {
+			?>
+				<meta name="msapplication-TileImage" content="<?php echo whitemap_get_option('windows_tile_icon'); ?>">
+			<?php
+			}
+		?>
+
 		<meta name="application-name" content="<?php bloginfo('name'); ?>">
-		<meta name="msapplication-TileColor" content="<?php echo whitemap_get_option('header_background_color_top'); ?>">
-		<meta name="msapplication-TileImage" content="<?php echo whitemap_get_option('windows_tile_icon'); ?>">
 
 		<link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
 

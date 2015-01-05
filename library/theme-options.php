@@ -178,7 +178,8 @@ $whitemap_Admin->hooks();
  * @return mixed        Option value
  */
 function whitemap_get_option( $key = '' ) {
-	return cmb_get_option( whitemap_Admin::key(), $key );
+	$option_value = cmb_get_option( whitemap_Admin::key(), $key );
+	return $option_value;
 }
 
 /***********************************************************
@@ -213,30 +214,10 @@ function whitemap_theme_option_css() {
 	// end the style block
 	$output = "\n" . '<link rel="stylesheet" id="whitemap-user-css" type="text/css" media="all" href="data:text/css;base64,' . base64_encode($css) . '" />' . "\n";
 
-	// Echo all to the front end
-	echo $output;
+	// Echo all to the front end if there is something there
+	if ( !empty($css) ) {
+		echo $output;
+	}
 
 }
 add_action('wp_enqueue_scripts', 'whitemap_theme_option_css');
-
-
-
-function whitemap_theme_option_js() {
-
-	$output = '<script type="text/javascript">' . "\n";
-	$output = 'var WhiteMap = WhiteMap || {};' . "\n";
-
-	if ( is_single() ) {
-		$output .= 'var marker = L.marker([' . $default_map_location['latitude'] . ', ' . $default_map_location['longitude'] . '], { icon: new WhiteMap.map_icon_1() });';
-		$output .= 'marker.addTo(WhiteMap.map);';
-		$output .= 'WhiteMap.map.dragging.disable();';
-		$output .= 'WhiteMap.map.keyboard.disable();';
-	}
-
-	$output .= '</script>' . "\n";
-
-	// Echo all to the front end
-	echo $output;
-
-}
-add_action('wp_footer', 'whitemap_theme_option_js', 100);

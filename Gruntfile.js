@@ -24,7 +24,7 @@ module.exports = function(grunt) {
 					sourceMap: true,
 				},
 				files: {
-					'library/css/<%= pkg.name %>.min.css': ['library/less/<%= pkg.name %>.less'],
+					'library/css/<%= pkg.name %>.min.css': ['library/less/_package.less'],
 				},
 			},
 		},
