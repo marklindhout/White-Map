@@ -14,32 +14,37 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 		<?php
-			if (!empty(whitemap_get_option('apple_touch_icon'))) {
+		  $apple_touch_icon = whitemap_get_option('apple_touch_icon');
+			if (!empty($apple_touch_icon)) {
 			?>
 				<link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
 				<link rel="apple-touch-icon-precomposed" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
 			<?php
 			}
 
-			if (!empty(whitemap_get_option('favicon_png'))) {
+      $faviconpng = whitemap_get_option('favicon_png');
+			if (!empty($favicon_png)) {
 			?>
 				<link rel="icon" href="<?php echo whitemap_get_option('favicon_png'); ?>">
 			<?php
 			}
 
-			if (!empty(whitemap_get_option('favicon'))) {
+			$favicon = whitemap_get_option('favicon');
+			if (!empty($favicon)) {
 			?>
 				<!--[if IE]><link rel="shortcut icon" href="<?php echo whitemap_get_option('favicon'); ?>"><![endif]-->
 			<?php
 			}
 			
-			if (!empty(whitemap_get_option('main_color'))) {
+			$main_color = whitemap_get_option('main_color');
+			if (!empty($main_color)) {
 			?>
 				<meta name="msapplication-TileColor" content="<?php echo whitemap_get_option('main_color'); ?>">
 			<?php
 			}
 			
-			if (!empty(whitemap_get_option('windows_tile_icon'))) {
+			$windows_tile_icon = whitemap_get_option('windows_tile_icon');
+			if (!empty($windows_tile_icon)) {
 			?>
 				<meta name="msapplication-TileImage" content="<?php echo whitemap_get_option('windows_tile_icon'); ?>">
 			<?php
