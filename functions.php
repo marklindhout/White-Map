@@ -577,7 +577,10 @@ function whitemap_get_map_marker($type) {
 }
 
 
-// JSON Location feed
+
+/***********************************************************
+ JSON Location feed
+**********************************************************/
 function whitemap_get_locations() {
 
 	global $wpdb;
@@ -639,3 +642,49 @@ function whitemap_get_locations() {
 
 	return $locations;
 }
+
+
+
+/***********************************************************
+ Generate custom CSS based on theme options input.
+ **********************************************************/
+
+function whitemap_theme_option_css() {
+
+	$main_color = whitemap_get_option('main_color');
+	$site_logo  = wp_get_attachment_image_src( whitemap_get_option('site_logo_id'), 'whitemap-logo' );
+
+	// start the style file
+	$css = '';
+
+	if ( !empty($site_logo) ) {
+		$css .= "\n" . '#container #header .logo {' . "\n";
+		$css .= 'background-image: url(' . $site_logo[0] . ');' . "\n";
+		$css .= 'width: ' . $site_logo[1] . 'px;' . "\n";
+		$css .= 'height: ' . $site_logo[2] . 'px;' . "\n";
+		$css .= 'text-indent: ' . $site_logo[1] . 'px;' . "\n";
+		$css .= 'line-height: ' . $site_logo[2] . 'px;' . "\n";
+		$css .= '}' . "\n";
+	}
+
+	if ( !empty($main_color) ) {
+		$css .= "\n";
+		$css .= 'a {' . "color: " . $main_color . "}";
+		$css .= "\n";
+		$css .= '.single-title {' . "color: " . $main_color . "}";
+		$css .= "\n";
+		$css .= '.button {' . "background-color: " . $main_color . "}";
+		$css .= "\n";
+		$css .= '.brand {' . "background-color: " . $main_color . "}";
+	}
+
+	// end the style block
+	$output = "\n" . '<style>' . "\n" . $css . "\n" . '</style>';
+
+	// Echo all to the front end if there is something there
+	if ( !empty($css) ) {
+		echo $output;
+	}
+
+}
+add_action('wp_enqueue_scripts', 'whitemap_theme_option_css');

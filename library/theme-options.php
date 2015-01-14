@@ -171,6 +171,7 @@ class whitemap_Admin {
 $whitemap_Admin = new whitemap_Admin();
 $whitemap_Admin->hooks();
 
+
 /**
  * Wrapper function around cmb_get_option
  * @since  0.1.0
@@ -182,46 +183,76 @@ function whitemap_get_option( $key = '' ) {
 	return $option_value;
 }
 
-/***********************************************************
- Theme Options in Front-end
- **********************************************************/
 
-function whitemap_theme_option_css() {
 
-	$main_color = whitemap_get_option('main_color');
-	$site_logo  = wp_get_attachment_image_src( whitemap_get_option('site_logo_id'), 'whitemap-logo' );
+/***
 
-	// start the style file
-	$css = '';
+	TO DO: SETTINGS API 
 
-	if ( !empty($site_logo) ) {
-		$css .= "\n" . '#container #header .logo {' . "\n";
-		$css .= 'background-image: url(' . $site_logo[0] . ');' . "\n";
-		$css .= 'width: ' . $site_logo[1] . 'px;' . "\n";
-		$css .= 'height: ' . $site_logo[2] . 'px;' . "\n";
-		$css .= 'text-indent: ' . $site_logo[1] . 'px;' . "\n";
-		$css .= 'line-height: ' . $site_logo[2] . 'px;' . "\n";
-		$css .= '}' . "\n";
-	}
+	Tuts:
 
-	if ( !empty($main_color) ) {
-		$css .= "\n";
-		$css .= 'a {' . "color: " . $main_color . "}";
-		$css .= "\n";
-		$css .= '.single-title {' . "color: " . $main_color . "}";
-		$css .= "\n";
-		$css .= '.button {' . "background-color: " . $main_color . "}";
-		$css .= "\n";
-		$css .= '.brand {' . "background-color: " . $main_color . "}";
-	}
+	1. http://alisothegeek.com/2011/01/wordpress-settings-api-tutorial-1/
 
-	// end the style block
-	$output = "\n" . '<style>' . "\n" . $css . "\n" . '</style>';
+**/
 
-	// Echo all to the front end if there is something there
-	if ( !empty($css) ) {
-		echo $output;
-	}
+
+
+function whitemap_add_admin_menu() { 
+	add_menu_page( 'White Map TEST SETTINGS', 'White Map TEST SETTINGS', 'manage_options', 'whitemap', 'whitemap_render_options_page' );
+}
+
+
+function whitemap_settings_init() { 
+
+	register_setting( 'whiteMap', 'whitemap_settings' );
+
+	add_settings_section(
+		'whitemap_settings_section_logo', 
+		__( 'Custom branding elements', 'whitemap' ), 
+		'whitemap_render_section_callback_logo', 
+		'whiteMap'
+	);
+
+	add_settings_field( 
+		'site_logo', 
+		__( 'Site logo', 'whitemap' ), 
+		'whitemap_render_field_site_logo', 
+		'whiteMap', 
+		'whitemap_settings_section_logo' 
+	);
 
 }
-add_action('wp_enqueue_scripts', 'whitemap_theme_option_css');
+
+
+function whitemap_render_field_site_logo() { 
+	$options = get_option( 'whitemap_settings' );
+?>
+	<input type="file" name="whitemap_settings[site_logo]" value="<?php echo $options['site_logo']; ?>">
+<?php
+}
+
+function whitemap_render_section_callback_logo() { 
+	echo __('Here you can add your own custom branding elements to make White Map look exaclty like you want it.', 'whitemap');
+}
+
+function whitemap_render_options_page() { 
+	?>
+		<form action="options.php" method="post" enctype="multipart/form-data">
+			<h2>White Map</h2>
+			<?php
+				settings_fields( 'whiteMap' );
+				do_settings_sections( 'whiteMap' );
+				submit_button();
+			?>
+		</form>
+	<?php
+}
+add_action( 'admin_menu', 'whitemap_add_admin_menu' );
+add_action( 'admin_init', 'whitemap_settings_init' );
+
+
+
+
+
+
+
