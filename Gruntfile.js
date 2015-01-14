@@ -4,6 +4,27 @@ module.exports = function(grunt) {
 
 		pkg: grunt.file.readJSON('package.json'),
 
+		appcache: {
+			options: {
+				basePath: '.'
+			},
+			all: {
+				dest: '<%= pkg.name %>.appcache',
+				cache: {
+					patterns: [
+						'style.css',
+						'library/css/**/*',
+						'library/font/**/*',
+						'library/img/**/*',
+						'library/js/**/*',
+					],
+					literals: '/',
+					network: '*',
+					fallback: '/ /offline.html',
+				},
+			},
+		},
+
 		// Javascript Linting
 		jshint: {
 			options: {
@@ -54,6 +75,7 @@ module.exports = function(grunt) {
 	});
 
 	// Load modules
+	grunt.loadNpmTasks('grunt-appcache');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-watch');
@@ -62,6 +84,6 @@ module.exports = function(grunt) {
 	// Define tasks
 	grunt.registerTask('default', ['watch']);
 	grunt.registerTask('buildall', ['build-all']);
-	grunt.registerTask('build-all', ['less', 'uglify', 'jshint']);
+	grunt.registerTask('build-all', ['appcache', 'less', 'uglify', 'jshint']);
 
 };
