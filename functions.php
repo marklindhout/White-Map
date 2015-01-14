@@ -313,9 +313,9 @@ SIDEBARS
 
 function whitemap_register_sidebars() {
 	register_sidebar(array(
-		'id' => 'sidebar1',
-		'name' => __( 'Menu Lower Area', 'whitemap' ),
-		'description' => __( 'Area located at the bottom of the slide-in-menu on the loeft of the page.', 'whitemap' ),
+		'id' => 'slide_in_menu_bottom',
+		'name' => __( 'Slide-in Menu (bottom)', 'whitemap' ),
+		'description' => __( 'Area located at the bottom of the slide-in-menu on the left of the page.', 'whitemap' ),
 		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget' => '</div>',
 		'before_title' => '<h4 class="widgettitle">',
@@ -393,20 +393,13 @@ function whitemap_comment_form() {
 		'label_submit'      => __('Post your rating', 'whitemap'),
 		
 		'comment_field'     => ''
-							. '<div class="comment-form-rating"><label for="rating">' . __( 'Rating' ) . '</label>'
-							// . '<span class="rating_execute">'
-							// . '<input class="star" name="rating" value="1" type="radio" />'
-							// . '<input class="star" name="rating" value="2" type="radio" />'
-							// . '<input class="star" name="rating" value="3" type="radio" />'
-							// . '<input class="star" name="rating" value="4" type="radio" />'
-							// . '<input class="star" name="rating" value="5" type="radio" />'
-							// . '</span>'
+							. '<div class="comment-form-rating"><label for="rating">' . __( 'Rating', 'whitemap' ) . '</label>'
 							 . '<div class="rating">'
-							     . '<input type="radio" name="rating" value="1" checked /><span></span>'
-							     . '<input type="radio" name="rating" value="2" /><span></span>'
-							     . '<input type="radio" name="rating" value="3" /><span></span>'
-							     . '<input type="radio" name="rating" value="4" /><span></span>'
-							     . '<input type="radio" name="rating" value="5" /><span></span>'
+								 . '<input type="radio" name="rating" value="1" checked /><span></span>'
+								 . '<input type="radio" name="rating" value="2" /><span></span>'
+								 . '<input type="radio" name="rating" value="3" /><span></span>'
+								 . '<input type="radio" name="rating" value="4" /><span></span>'
+								 . '<input type="radio" name="rating" value="5" /><span></span>'
 							 . '</div>'
 							. '</div>'
 							. '<div class="comment-form-comment"><label for="comment">'
@@ -424,7 +417,7 @@ function whitemap_comment_form() {
 							. '</div>',
 		
 		'comment_notes_before' => '<div class="comment-notes">'
-							. __( 'Your email address will not be published.' )
+							. __( 'Your email address will not be published.', 'whitemap' )
 							. ( $req ? $required_text : '' )
 							. '</div>',
 
@@ -456,10 +449,10 @@ function whitemap_comment_form() {
 	);
 
 	if($usercomment) {
-	    echo "<!-- One comment per user per post -->";
+		echo "<!-- One comment per user per post -->";
 	}
 	else {
-	    comment_form($comments_args);
+		comment_form($comments_args);
 	}
 	
 }
@@ -587,6 +580,22 @@ function whitemap_get_locations() {
 
 	global $wpdb;
 
+	function return_tags_as_array($pid) {
+
+		$tags = array();
+		$rawtags = wp_get_object_terms( $pid, 'post_tag' );
+
+		if (!empty($rawtags)){
+			if (!is_wp_error($rawtags)) {
+				foreach ($rawtags as $rawtag) {
+					$tags[] = $rawtag->name;
+				}
+			}
+		}
+
+		return $tags;
+	}
+
 	// use get_posts because it is actually outside of the loop.
 	$posts_query = new WP_Query(
 		array(
@@ -603,24 +612,26 @@ function whitemap_get_locations() {
 
 	foreach ($posts_query->posts as $post) {
 
-			$ray = array();
+		$pid = $post->ID;
+		$desc_length = 128;
+		$ray = array();
 			
-			$ray['id']          = $post->ID;
-			$ray['permalink']   = get_permalink($post->ID);
-			$ray['date']        = $post->post_date;
-			$ray['timestamp']   = strtotime($post->post_date);
-			$ray['title']       = $post->post_title;
-			$ray['description'] = substr($post->post_content, 0, 200) . '…';
-			$ray['street']      = get_post_meta($post->ID, 'whitemap_street_address', true);
-			$ray['postal']      = get_post_meta($post->ID, 'whitemap_postal-code', true);
-			$ray['city']        = get_post_meta($post->ID, 'whitemap_city', true);
-			
-			$ray['latitude']    = floatval(get_post_meta($post->ID, 'whitemap_location_latitude', true));
-			$ray['longitude']   = floatval(get_post_meta($post->ID, 'whitemap_location_longitude', true));
-			
-			// New if < 5 days ago
-			$ray['new']         = date('U') - $ray['timestamp'] <= 60 * 60 * 24 * 5;
-			$locations[]        = $ray;
+		$ray['id']          = $pid;
+		$ray['permalink']   = get_permalink($pid);
+		$ray['date']        = $post->post_date;
+		$ray['timestamp']   = strtotime($post->post_date);
+		$ray['title']       = $post->post_title;
+		$ray['description'] = ( strlen($post->post_content) > $desc_length ? substr($post->post_content, 0, $desc_length) : $post->post_content);
+		$ray['desc_is_cut'] = strlen($post->post_content) > $desc_length;
+		$ray['street']      = get_post_meta($pid, 'whitemap_street_address', true);
+		$ray['postal']      = get_post_meta($pid, 'whitemap_postal-code', true);
+		$ray['city']        = get_post_meta($pid, 'whitemap_city', true);
+		$ray['latitude']    = floatval(get_post_meta($pid, 'whitemap_location_latitude', true));
+		$ray['longitude']   = floatval(get_post_meta($pid, 'whitemap_location_longitude', true));
+		$ray['tags']        = return_tags_as_array($pid);
+		$ray['new']         = date('U') - $ray['timestamp'] <= (60 * 60 * 24 * 5); // New if < 5 days ago
+
+		$locations[]        = $ray;
 	}
 	wp_reset_postdata();
 

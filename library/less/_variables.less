@@ -1,12 +1,15 @@
 
 // FONTS
-@fontheadline: "American Typewriter", "Courier", monospace, "Georgia", "Times New Roman", "Times", serif;
+@fontheadline: "Coustard", "Georgia", "Times New Roman", "Times", serif;
 @fontcopy: "Ubuntu", "Calibri", "Trebuchet", "Times", serif;
-@fontsize_s: 12px;
-@fontsize_m: 14px;
-@fontsize_l: 16px;
-@fontsize_xl: 26px;
-@fontsize_xxl: 32px;
+
+@font_base_unit: 16px;
+
+@fontsize_s: (@font_base_unit * 0.66);
+@fontsize_m: (@font_base_unit * 0.75);
+@fontsize_l: @font_base_unit;
+@fontsize_xl: (@font_base_unit * 1.5);
+@fontsize_xxl: (@font_base_unit * 2);
 
 // COLORS
 @colorbrand: #C60000;
@@ -18,12 +21,12 @@
 // PAGE STRUCTURE
 @page_max_width: 1024px;
 
-// SPACINGS
-
-
 // SLIDE-IN MENU
 @menu_width: 256px; // absolute size in relation to the page. Also used in resizing teh map view.
 @container_width: 100%; // width of container in normal state
+
+// HEADER
+@header_height: 64px;
 
 // MAP POPUPS
 @popup_height: 256px;

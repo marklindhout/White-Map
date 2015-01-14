@@ -19,19 +19,19 @@ class whitemap_walker_comment extends Walker_Comment {
 	}
 
 	// Starts the children list
-	function start_lvl( &$output, $depth = 0, $args = array() ) {      
+	function start_lvl( &$output, $depth=0, $args=array() ) {      
 		$GLOBALS['comment_depth'] = $depth + 1;
 		echo '<div class="children">';
 	}
 
 	// Ends the children list
-	function end_lvl( &$output, $depth = 0, $args = array() ) {
+	function end_lvl( &$output, $depth=0, $args=array() ) {
 		$GLOBALS['comment_depth'] = $depth + 1;
 		echo '</div>';
 	}
 
 	// Start element
-	function start_el( &$output, $comment, $depth, $args, $id = 0 ) {
+	function start_el( &$output, $comment, $depth=0, $args=array(), $id=0 ) {
 		$depth++;
 		$GLOBALS['comment_depth'] = $depth;
 		$GLOBALS['comment'] = $comment;
@@ -68,14 +68,14 @@ class whitemap_walker_comment extends Walker_Comment {
 	// End element
 	function end_el(&$output, $comment, $depth = 0, $args = array() ) {
 		?>
-		</article>
+			</article>
 		<?php
 	}
 
 	// End comments section
 	function __destruct() {
 		?>
-		</section>
+			</section>
 		<?php
 	}
 

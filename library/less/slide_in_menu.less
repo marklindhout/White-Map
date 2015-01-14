@@ -1,0 +1,116 @@
+// Mobile-first base styling
+#container, #menu {
+	display: inline;
+}
+
+#menu {
+	display: block;
+	position: absolute;
+	width: @menu_width;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	background: @colordark url(../img/pattern-dark.png) repeat center center;
+	font-family: @fontcopy;
+	font-size: 0.85em;
+
+	.slide_in_menu {
+		height: 100%;
+		padding-bottom: @menu_width;
+
+		a {
+			z-index: 3;
+			display: block;
+			padding: 1em 1.5em;
+			border-bottom: 1px solid lighten(@colordark, 20%);
+			margin-bottom: 0;
+			color: @colorlight;
+			text-decoration: none;
+
+			&:hover {
+				color: #333;
+				background-color: #eee;
+			}
+		}
+	}
+
+	.bottom_widget_area {
+		margin-top: -@menu_width;
+		height: @menu_width;
+		padding: 2em;
+		border-top: 1px solid lighten(@colordark, 5%);
+		color: darken(@colorlight, 50%);
+		background: @colordark url(../img/pattern-light.png) repeat center center;
+
+		.widget {
+			color: darken(@colorlight, 50%);
+
+			.widgettitle {
+				color: darken(@colorlight, 30%);
+			}
+
+			a {
+				color: darken(@colorlight, 25%);
+
+				&:hover {
+					color: darken(@colorlight, 10%);
+				}
+			}
+
+			.search-field {
+				width: 70%;
+				float: left; 
+				.input_field();
+			}
+
+			.search-submit {
+				width: 25%;
+				float: right; 
+			}
+		}
+	}
+
+}
+
+#container {
+	width: @container_width;
+	background-color: #fff;
+	z-index: 5;
+	position: fixed;
+	left: 0px;
+	height: 100%;
+	-webkit-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+		moz-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+		  o-box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+			box-shadow:  -8px 0px 32px 0px rgba(0, 0, 0, 0.9);
+	-webkit-transition: width 500ms ease, left 500ms ease;
+	transition: width 500ms ease, left 500ms ease;
+
+	overflow: auto;
+
+	&.menu_shown {
+		left: @menu_width;
+		width: (@container_width - @menu_width);
+	}
+
+	#content {
+		margin: 0 auto;
+		width: 100%;
+		max-width: @page_max_width;
+		font-family: @fontcopy;
+		color: @colormedium;
+		font-size: @fontsize_m;
+		line-height: 133%;
+
+		.hentry {
+			.article-header {
+				padding: 1em 4em;
+			}
+			
+			.entry-content {
+				padding: 1em 4em;
+			}
+		}
+	}
+
+}

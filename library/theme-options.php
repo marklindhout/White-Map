@@ -212,7 +212,7 @@ function whitemap_theme_option_css() {
 	}
 
 	// end the style block
-	$output = "\n" . '<link rel="stylesheet" id="whitemap-user-css" type="text/css" media="all" href="data:text/css;base64,' . base64_encode($css) . '" />' . "\n";
+	$output = "\n" . '<style>' . "\n" . $css . "\n" . '</style>';
 
 	// Echo all to the front end if there is something there
 	if ( !empty($css) ) {

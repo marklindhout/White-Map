@@ -25,7 +25,6 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 	margin: 0;
 	padding: 0;
 	line-height: 1em;
-	margin: 0.3em 0;
 
 	a {
 		text-decoration: none;
@@ -34,35 +33,43 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 
 h1, .h1 {
 	font-size: @fontsize_xxl;
+	margin-bottom: (@font_base_unit * 0.5);
 }
 
 h2, .h2 {
 	font-size: @fontsize_xl;
+	margin-bottom: (@font_base_unit * 0.5);
 }
 
 h3, .h3 {
-	font-size: @fontsize_xl;
+	font-size: @fontsize_l;
 	color: @colormedium;
+	margin-bottom: (@font_base_unit * 0.5);
 }
 
 h4, .h4 {
 	font-size: @fontsize_l;
-	font-family:  @fontcopy;
-	font-weight: bold;
-	text-transform: uppercase;
+	margin-bottom: (@font_base_unit * 0.5);
 }
 
 h5, .h5 {
 	font-size: @fontsize_l;
-	font-family:  @fontcopy;
+	font-family: @fontcopy;
 	font-weight: bold;
+	margin-bottom: (@font_base_unit * 0.5);
 }
 
 h6, .h6 {
 	font-size: @fontsize_l;
-	font-family:  @fontcopy;
-	font-weight: bold;
+	font-family: @fontcopy;
 	color: @colormedium;
+	margin-bottom: (@font_base_unit * 0.25);
+}
+
+// Text
+p {
+	margin-top: 0;
+	margin-bottom: (@font_base_unit * 0.75);
 }
 
 

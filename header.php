@@ -5,7 +5,7 @@
 <!--[if (IE 8)&!(IEMobile)]><html <?php language_attributes(); ?> class="no-js lt-ie9"><![endif]-->
 <!--[if gt IE 8]><!--> <html <?php language_attributes(); ?> class="no-js"><!--<![endif]-->
 
-  <head>
+	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title><?php wp_title(''); ?></title>
@@ -14,7 +14,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 		<?php
-		  $apple_touch_icon = whitemap_get_option('apple_touch_icon');
+			$apple_touch_icon = whitemap_get_option('apple_touch_icon');
 			if (!empty($apple_touch_icon)) {
 			?>
 				<link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
@@ -22,7 +22,7 @@
 			<?php
 			}
 
-      $faviconpng = whitemap_get_option('favicon_png');
+			$faviconpng = whitemap_get_option('favicon_png');
 			if (!empty($favicon_png)) {
 			?>
 				<link rel="icon" href="<?php echo whitemap_get_option('favicon_png'); ?>">
@@ -65,41 +65,53 @@
 
 	<body <?php body_class(); ?>>
 
-		<nav id="menu" role="navigation">
-			<?php
+		<div id="menu">
+			<nav class="slide_in_menu" role="navigation">
+				<?php
+					$menu_name = 'main-nav';
 
-				$menu_name = 'main-nav';
+					if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $menu_name ] ) ) {
+						$menu = wp_get_nav_menu_object( $locations[ $menu_name ] );
+						$menu_items = wp_get_nav_menu_items($menu->term_id);
+						$menu_list = '';
 
-				if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $menu_name ] ) ) {
-					$menu = wp_get_nav_menu_object( $locations[ $menu_name ] );
-					$menu_items = wp_get_nav_menu_items($menu->term_id);
-					$menu_list = '';
+						foreach ( (array) $menu_items as $key => $menu_item ) {
+							$title = $menu_item->title;
+							$url = $menu_item->url;
+							$menu_list .= '<a class="menu_link" href="' . $url . '">' . $title . '</a>';
+						}
 
-					foreach ( (array) $menu_items as $key => $menu_item ) {
-						$title = $menu_item->title;
-						$url = $menu_item->url;
-						$menu_list .= '<a class="menu_link" href="' . $url . '">' . $title . '</a>';
+					} else {
+						$menu_list = 'Menu "' . $menu_name . '" not defined.';
 					}
 
-				} else {
-					$menu_list = 'Menu "' . $menu_name . '" not defined.';
-				}
+					echo $menu_list;
+				?>
+			</nav>
 
-				echo $menu_list;
-
-			?>
-		</nav>
+			<?php get_sidebar(); ?>
+		</div>
 
 		<div id="container">
 
 			<header id="header">
-				<h1 class="logo"><a href="<?php echo home_url(); ?>" rel="nofollow"><?php bloginfo('name'); ?></a></h1>
+				<?php
+					$logo = whitemap_get_option('site_logo');
+					$lc = ( isset($logo) && !empty($logo) ? 'logo' : 'nologo' );
+				?>
+				<h1 class="<?php echo $lc; ?>"><a href="<?php echo home_url(); ?>" rel="nofollow"><?php bloginfo('name'); ?></a></h1>
 				<div id="menutoggle" class="cf">
 					<a class="button"><i class="fa fa-bars"></i></a>
 				</div>
 				<?php
 					if ( is_user_logged_in() ) {
-						echo '<a class="admin_link button" href="'.admin_url().'">'.__('Admin','whitemap').'</a>';
+					?>
+						<div class="admin_links">
+							<a class="button" href="<?php echo admin_url(); ?>">
+								<i class="fa fa-gear"></i>
+							</a>
+						</div>
+					<?php
 					}
 				?>
 			</header>

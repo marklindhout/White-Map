@@ -1,10 +1,12 @@
 <?php
-add_action( 'after_switch_theme', 'whitemap_flush_rewrite_rules' );
 
 // Flush your rewrite rules
 function whitemap_flush_rewrite_rules() {
 	flush_rewrite_rules();
 }
+add_action( 'after_switch_theme', 'whitemap_flush_rewrite_rules' );
+
+
 
 // let's create the function for the custom type
 function post_type_location() { 
@@ -38,19 +40,20 @@ function post_type_location() {
 			'has_archive' => 'location', /* you can rename the slug here */
 			'capability_type' => 'post',
 			'hierarchical' => false,
-			'supports' => array( 'title', 'editor', 'author', 'revisions')
+			'supports' => array( 'title', 'editor', 'author', 'revisions'),
+			'taxonomies' => array('post_tag'),
 		)
 	);
 }
 add_action( 'init', 'post_type_location');
 
-// remove the WordPress standard meta box from the 'location' edit screen.
-// remove the WordPress standard featured image box from the 'location' edit screen.
-function location_remove_meta_boxes() {
-	remove_meta_box( 'tagsdiv-location-type' , 'location' , 'side' );
-	remove_meta_box( 'postimagediv' , 'location' , 'normal' );
-}
-add_action( 'admin_menu' , 'location_remove_meta_boxes' );
+// // remove the WordPress standard meta box from the 'location' edit screen.
+// // remove the WordPress standard featured image box from the 'location' edit screen.
+// function location_remove_meta_boxes() {
+// 	remove_meta_box( 'tagsdiv-location-type' , 'location' , 'side' );
+// 	remove_meta_box( 'postimagediv' , 'location' , 'normal' );
+// }
+// add_action( 'admin_menu' , 'location_remove_meta_boxes' );
 
 
 /***************************************************************************************
@@ -64,6 +67,7 @@ function cmb_initialize_cmb_meta_boxes() {
 	}
 }
 add_action( 'init', 'cmb_initialize_cmb_meta_boxes', 9999 );
+
 
 
 function whitemap_meta_boxes( array $meta_boxes ) {

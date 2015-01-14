@@ -11,15 +11,16 @@ var WhiteMap = WhiteMap || {};
 *********************************************************/
 WhiteMap.center = new L.LatLng(WhiteMap.map_default_location.latitude, WhiteMap.map_default_location.longitude);
 
-
 /********************************************************
  MAP
 *********************************************************/
-WhiteMap.map = L.map("wmap", {
-	center: WhiteMap.center,
-	zoom: 15
-});
-
+// Only loaded if the container element is present
+if ( document.getElementById('wmap') !== null ) {
+	WhiteMap.map = L.map('wmap', {
+		center: WhiteMap.center,
+		zoom: 15
+	});
+}
 
 /********************************************************
  POPUP
@@ -125,7 +126,26 @@ WhiteMap.add_markers = function () {
 		}
 
 		if ( posts[j].hasOwnProperty('description') ) {
-			popup_text += '<div class="description">' + posts[j].description + '</div>\n';
+
+			var cut = false;
+
+			if ( posts[j].hasOwnProperty('desc_is_cut') ) {
+				cut = (posts[j].desc_is_cut ? ' ' + 'cut' : '');
+			}
+
+			popup_text += '<div class="description' + cut + '">' + posts[j].description + '</div>\n';
+		}
+
+		if ( posts[j].hasOwnProperty('tags') ) {
+			popup_text += '<ul class="tags">';
+
+			for (var tag = 0; tag < posts[j].tags.length; tag++) {
+				popup_text += '<li class="tag">';
+				popup_text += posts[j].tags[tag];
+				popup_text += '</li>';
+			}
+
+			popup_text += '</ul>\n';
 		}
 
 		if ( posts[j].hasOwnProperty('latitude') ) {
