@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html <?php language_attributes(); ?> class="no-js" manifest="<?php echo get_template_directory_uri(); ?>/whitemap.appcache">
+<html <?php language_attributes(); ?> class="no-js" <?php /* manifest="<?php echo get_template_directory_uri(); ?>/whitemap.appcache"*/?>>
 
 	<head>
 		<meta charset="utf-8">

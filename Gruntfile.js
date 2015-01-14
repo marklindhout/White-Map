@@ -64,11 +64,11 @@ module.exports = function(grunt) {
 		watch: {
 			js: {
 				files: ['<%= jshint.files %>'],
-				tasks: ['uglify', 'jshint'],
+				tasks: ['appcache', 'uglify', 'jshint'],
 			},
 			less: {
 				files: ['library/less/**/*.less'],
-				tasks: ['less'],
+				tasks: ['appcache', 'less'],
 			},
 		},
 

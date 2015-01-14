@@ -186,9 +186,9 @@ function whitemap_theme_support() {
 	add_theme_support( 'menus' );
 	register_nav_menus(
 		array(
-			'main-nav' => __( 'Left slide-in', 'whitemap' ),
+			'main-nav' => __( 'Left Slide-in Menu', 'whitemap' ),
 		)
-		);
+	);
 }
 
 
@@ -304,6 +304,7 @@ IMAGE SIZES
 
 add_image_size( 'whitemap-thumb-600', 600, 150, true );
 add_image_size( 'whitemap-thumb-300', 300, 100, true );
+add_image_size( 'whitemap-logo', 256, 128, true );
 
 
 
@@ -524,7 +525,8 @@ function whitemap_get_map_layer($type) {
 	// Available map layers. Can be replaced by a function that extracts layers from theme options.
 	$map_layers = array(
 		'default' => array(
-			'url'         => 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png',
+			'url'         => 'https://{s}.tiles.mapbox.com/v3/marklindhout.hpk7ih6p/{z}/{x}/{y}.png',
+			// 'url'         => 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png',
 			'attribution' => '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 			'opacity'     => '1.0',
 		),

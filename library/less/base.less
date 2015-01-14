@@ -27,35 +27,38 @@
 		background-repeat: no-repeat;
 		background-color: transparent;
 		text-align: center;
-		background: @colordark url(../img/pattern-dark.png) repeat center center;
 
 		&.logo {
-			min-height: 95px;
-			line-height: 128px;
-			text-indent: 190px;
 			overflow: hidden;
+
+			a {
+				line-height: inherit;
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
 		}
 
 		&.nologo {
+			background: @colordark url(../img/pattern-dark.png) repeat center center;
 			min-height: @header_height;
 			padding: @font_base_unit;
 			line-height: (@font_base_unit * 2);
 			.drop-shadow();
-		}
 
-		a {
-			color: @colorlight;
-			border-bottom: 2px solid transparent;
-			line-height: inherit;
-			display: block;
-			width: 100%;
-			height: 100%;
+			a {
+				color: @colorlight;
+				border-bottom: 2px solid transparent;
+				line-height: inherit;
+				display: block;
+				width: 100%;
+				height: 100%;
 
-			&:hover {
-				border-bottom: 2px solid @colorbrand;
+				&:hover {
+					border-bottom: 2px solid @colorbrand;
+				}
 			}
 		}
-
 		
 	}
 
