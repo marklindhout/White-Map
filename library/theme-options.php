@@ -195,45 +195,265 @@ function whitemap_get_option( $key = '' ) {
 
 **/
 
-
+/************************************************************
+ ADMIN MENU
+*************************************************************/
 
 function whitemap_add_admin_menu() { 
 	add_menu_page( 'White Map TEST SETTINGS', 'White Map TEST SETTINGS', 'manage_options', 'whitemap', 'whitemap_render_options_page' );
 }
+add_action( 'admin_menu', 'whitemap_add_admin_menu' );
 
+
+
+/************************************************************
+ INITIALIZE
+*************************************************************/
 
 function whitemap_settings_init() { 
 
 	register_setting( 'whiteMap', 'whitemap_settings' );
 
 	add_settings_section(
-		'whitemap_settings_section_logo', 
-		__( 'Custom branding elements', 'whitemap' ), 
-		'whitemap_render_section_callback_logo', 
+		'whitemap_settings_section_site_branding', 
+		__( 'Site branding', 'whitemap' ), 
+		'whitemap_render_section_site_branding', 
 		'whiteMap'
 	);
 
-	add_settings_field( 
-		'site_logo', 
-		__( 'Site logo', 'whitemap' ), 
-		'whitemap_render_field_site_logo', 
-		'whiteMap', 
-		'whitemap_settings_section_logo' 
-	);
+		add_settings_field( 
+			'site_logo', 
+			__( 'Site logo', 'whitemap' ), 
+			'whitemap_render_field_site_logo', 
+			'whiteMap', 
+			'whitemap_settings_section_site_branding' 
+		);
+
+	// 	// array(
+	// 	// 	'name'    => __( 'Favicon', 'whitemap' ),
+	// 	// 	'default' => get_stylesheet_directory_uri() . '/library/img/default_favicon.ico',
+	// 	// 	'desc'    => __( '16x16 pixels, windows ICO format.', 'whitemap' ),
+	// 	// 	'id'      => 'favicon',
+	// 	// 	'type'    => 'file',
+	// 	// 	'allow' => array( 'attachment' ),
+	// 	// ),
+
+	// 	add_settings_field( 
+	// 		'favicon', 
+	// 		__( 'Favicon', 'whitemap' ), 
+	// 		'whitemap_render_field_favicon', 
+	// 		'whiteMap', 
+	// 		'whitemap_settings_section_site_branding' 
+	// 	);
+
+	// 	// array(
+	// 	// 	'name'    => __( 'Site Icon (32x32)', 'whitemap' ),
+	// 	// 	'default' => get_stylesheet_directory_uri() . '/library/img/default_site_icon.png',
+	// 	// 	'desc'    => __( '32x32 pixels, PNG format.', 'whitemap' ),
+	// 	// 	'id'      => 'favicon_png',
+	// 	// 	'type'    => 'file',
+	// 	// 	'allow' => array( 'attachment' ),
+	// 	// ),
+
+	// 	add_settings_field( 
+	// 		'favicon_png', 
+	// 		__( 'Site Icon (32x32)', 'whitemap' ), 
+	// 		'whitemap_render_field_favicon_png', 
+	// 		'whiteMap', 
+	// 		'whitemap_settings_section_site_branding' 
+	// 	);
+
+	// 	// array(
+	// 	// 	'name'    => __( 'Apple Touch Icon', 'whitemap' ),
+	// 	// 	'default' => get_stylesheet_directory_uri() . '/library/img/default_apple_touch_icon.png',
+	// 	// 	'desc'    => __( '152x152 pixels, PNG format.', 'whitemap' ),
+	// 	// 	'id'      => 'apple_touch_icon',
+	// 	// 	'type'    => 'file',
+	// 	// 	'allow' => array( 'attachment' ),
+	// 	// ),
+
+	// 	add_settings_field( 
+	// 		'apple_touch_icon', 
+	// 		__( 'Apple Touch Icon', 'whitemap' ), 
+	// 		'whitemap_render_field_apple_touch_icon', 
+	// 		'whiteMap', 
+	// 		'whitemap_settings_section_site_branding' 
+	// 	);
+
+	// 	// array(
+	// 	// 	'name'    => __( 'Windows Tile Icon (270x270)', 'whitemap' ),
+	// 	// 	'default' => get_stylesheet_directory_uri() . '/library/img/default_windows_tile_icon.png',
+	// 	// 	'desc'    => __( '270x270 pixels, PNG format.', 'whitemap' ),
+	// 	// 	'id'      => 'windows_tile_icon',
+	// 	// 	'type'    => 'file',
+	// 	// 	'allow' => array( 'attachment' ),
+	// 	// ),
+
+	// 	add_settings_field( 
+	// 		'windows_tile_icon', 
+	// 		__( 'Windows Tile Icon (270x270)', 'whitemap' ), 
+	// 		'whitemap_render_field_windows_tile_icon', 
+	// 		'whiteMap', 
+	// 		'whitemap_settings_section_site_branding' 
+	// 	);
+
+	// 	// array(
+	// 	// 	'name'    => __( 'Main Color', 'whitemap' ),
+	// 	// 	'id'      => 'main_color',
+	// 	// 	'type'    => 'colorpicker',
+	// 	// 	'default' => '#fd0000',
+	// 	// ),
+
+	// 	add_settings_field( 
+	// 		'main_color', 
+	// 		__( 'Main theme color', 'whitemap' ), 
+	// 		'whitemap_render_field_main_color', 
+	// 		'whiteMap', 
+	// 		'whitemap_settings_section_site_branding' 
+	// 	);
+
+
+
+	// add_settings_section(
+	// 	'whitemap_settings_section_map_options', 
+	// 	__( 'Map Options', 'whitemap' ), 
+	// 	'whitemap_render_section_map_options', 
+	// 	'whiteMap'
+	// );
+
+	// 	// array(
+	// 	// 	'name'		=> 'Default Coordinates',
+	// 	// 	'desc'		=> 'This is the centerpoint of the map if no location is found. Drag the marker to set the exact location',
+	// 	// 	'id'		=> 'default_map_location',
+	// 	// 	'type'		=> 'pw_map',
+	// 	// 	'sanitization_cb' => 'pw_map_sanitise',
+	// 	// ),
+
+	// 	add_settings_field( 
+	// 		'default_map_location', 
+	// 		__( 'Default Map Coordinates', 'whitemap' ), 
+	// 		'whitemap_render_field_default_map_location', 
+	// 		'whiteMap', 
+	// 		'whitemap_settings_section_map_options' 
+	// 	);
 
 }
+add_action( 'admin_init', 'whitemap_settings_init' );
 
+
+
+/************************************************************
+ FIELD RENDERING
+*************************************************************/
 
 function whitemap_render_field_site_logo() { 
-	$options = get_option( 'whitemap_settings' );
-?>
-	<input type="file" name="whitemap_settings[site_logo]" value="<?php echo $options['site_logo']; ?>">
-<?php
+
+	// Load scripts required for media library	
+	wp_enqueue_media();
+
+	// Get the option
+	$options          = get_option('whitemap_settings');
+	$site_logo        = ( !empty($options['site_logo']) && isset($options['site_logo']) ? $options['site_logo'] : false );
+	$site_logo_src    = wp_get_attachment_image_src( $site_logo, 'medium' );
+	$site_logo_url    = $site_logo_src[0];
+	$default_logo_url = get_stylesheet_directory_uri() . '/library/img/default_logo.png';
+	$show_logo        = false;
+	$is_default_logo  = false;
+
+		if ($site_logo !== 'nologo') {
+			$show_logo = true; // Show the logo
+
+			if ( !is_numeric($site_logo)) {
+				$site_logo_url   = $default_logo_url;
+				$is_default_logo = true;
+			}
+		}
+
+	?>
+		<p>
+			<label>
+				<input id="show_logo" type="checkbox" value="show_logo" <?php echo ($show_logo ? 'checked="checked"' : '' ); ?> />
+				<?php _e('Show logo in header', 'whitemap'); ?>
+			</label>
+		</p>
+
+		<input id="site_logo" type="hidden" name="whitemap_settings[site_logo]" value="<?php echo $site_logo; ?>" />
+		<input id="site_logo_current" type="hidden" value="<?php echo $site_logo; ?>" />
+		<input id="site_logo_default" type="hidden" value="<?php echo $default_logo_url; ?>" />
+
+		<div id="site_logo_visibility_toggle" <?php echo (!$show_logo ? 'style="display: none;"': ''); ?>>
+			<img id="site_logo_preview" src="<?php echo ($site_logo && $show_logo ? $site_logo_url : $default_logo_url); ?>" />
+			<button id="upload_logo" class="button button"><?php _e('Pick another logo', 'whitemap'); ?></button>
+		</div>
+
+		<script type="text/javascript">
+			var show_logo         = jQuery('#show_logo');
+			var site_logo         = jQuery('#site_logo');
+			var upload_logo       = jQuery('#upload_logo');
+			var site_logo_current = jQuery('#site_logo_current');
+			var site_logo_default = jQuery('#site_logo_default');
+			var site_logo_vistog  = jQuery('#site_logo_visibility_toggle');
+
+			jQuery(document).ready(function($) {
+
+				show_logo.on('change', function(e){
+					if( show_logo.is(':checked') ) {
+						site_logo_vistog.show('fast');
+						if ( site_logo_current.val() === 'nologo' ) {
+							site_logo.val( site_logo_default.val() );
+						}
+						else {
+							site_logo.val( site_logo_current.val() );
+						}
+					}
+					else {
+						site_logo_vistog.hide('fast');
+						site_logo.val('nologo');
+					}
+				});
+
+				upload_logo.on('click', function() {
+
+					var send_attachment_bkp = wp.media.editor.send.attachment;
+					
+					wp.media.editor.send.attachment = function(props, attachment) {
+						$('#site_logo_preview').attr('src', attachment.sizes.medium.url);
+						console.log(attachment);
+						// $('.custom_media_url').val(attachment.url);
+						site_logo.val(attachment.id);
+						wp.media.editor.send.attachment = send_attachment_bkp;
+					}
+
+					wp.media.editor.open();
+
+					return false;       
+				});
+
+			});
+		</script>
+
+	<?php
 }
 
-function whitemap_render_section_callback_logo() { 
-	echo __('Here you can add your own custom branding elements to make White Map look exaclty like you want it.', 'whitemap');
+
+
+/************************************************************
+ SECTIONS
+*************************************************************/
+
+function whitemap_render_section_site_branding() { 
+	echo __('Here you can add your own custom branding elements to fit the theme to your needs.', 'whitemap');
 }
+
+function whitemap_render_section_map_options() { 
+	echo __('Here you can add your own custom branding elements to fit the map to your needs.', 'whitemap');
+}
+
+
+
+/************************************************************
+ PAGE RENDERING
+*************************************************************/
 
 function whitemap_render_options_page() { 
 	?>
@@ -247,8 +467,6 @@ function whitemap_render_options_page() {
 		</form>
 	<?php
 }
-add_action( 'admin_menu', 'whitemap_add_admin_menu' );
-add_action( 'admin_init', 'whitemap_settings_init' );
 
 
 
