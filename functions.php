@@ -479,13 +479,18 @@ add_action( 'comment_post', 'whitemap_save_comment_meta_data' );
 WHITE MAP
 ********************************************************/
 require_once( 'library/post-type-location.php' );
-require_once( 'library/theme-options.php' );
+require_once( 'library/theme-customizer.php' );
 
 // DEFAULT MAP LOCATION
 function whitemap_get_default_map_location() {
 
+	$rawlatlng = explode(',', get_theme_mod('default_coordinates'));
+
 	// if the default location is set in theme settings, load it here.
-	$default_map_location = whitemap_get_option('default_map_location');
+	$default_map_location = array(
+		'latitude' => $rawlatlng[0],
+		'longitude' => $rawlatlng[1],
+	);
 
 	// for single locations we override the default location
 	if ( is_single() && get_post_type() == 'location' ) {
@@ -649,16 +654,21 @@ function whitemap_get_locations() {
  Generate custom CSS based on theme options input.
  **********************************************************/
 
-function whitemap_theme_option_css() {
+function whitemap_theme_customizer_css() {
 
-	$main_color = whitemap_get_option('main_color');
-	$site_logo  = wp_get_attachment_image_src( whitemap_get_option('site_logo_id'), 'whitemap-logo' );
+	// Custom logo
+	$site_logo_id  = attachment_url_to_postid(get_theme_mod('site_logo'));
+	$site_logo     = wp_get_attachment_image_src( $site_logo_id, 'whitemap-logo' );
+
+	// Custom site color
+	$site_color = get_theme_mod('site_color');
 
 	// start the style file
 	$css = '';
 
 	if ( !empty($site_logo) ) {
-		$css .= "\n" . '#container #header .logo {' . "\n";
+		$css .= "\n";
+		$css .= '#container #header .logo {' . "\n";
 		$css .= 'background-image: url(' . $site_logo[0] . ');' . "\n";
 		$css .= 'width: ' . $site_logo[1] . 'px;' . "\n";
 		$css .= 'height: ' . $site_logo[2] . 'px;' . "\n";
@@ -667,15 +677,15 @@ function whitemap_theme_option_css() {
 		$css .= '}' . "\n";
 	}
 
-	if ( !empty($main_color) ) {
+	if ( !empty($site_color) ) {
 		$css .= "\n";
-		$css .= 'a {' . "color: " . $main_color . "}";
+		$css .= 'a {' . "color: " . $site_color . "}";
 		$css .= "\n";
-		$css .= '.single-title {' . "color: " . $main_color . "}";
+		$css .= '.button {' . "background-color: " . $site_color . "}";
 		$css .= "\n";
-		$css .= '.button {' . "background-color: " . $main_color . "}";
+		$css .= '.brand {' . "color: " . $site_color . " !important; }";
 		$css .= "\n";
-		$css .= '.brand {' . "background-color: " . $main_color . "}";
+		$css .= '.brandbg {' . "background-color: " . $site_color . "}";
 	}
 
 	// end the style block
@@ -686,5 +696,53 @@ function whitemap_theme_option_css() {
 		echo $output;
 	}
 
+
 }
-add_action('wp_enqueue_scripts', 'whitemap_theme_option_css');
+add_action( 'wp_head', 'whitemap_theme_customizer_css');
+
+
+/***********************************************************
+ HEDER ICONS
+**********************************************************/
+
+function whitemap_theme_customizer_icons() {
+
+	$apple_touch_icon = wp_get_attachment_image_src( attachment_url_to_postid(get_theme_mod('appletouchicon')), array(152,152) );
+	if (!empty($apple_touch_icon)) {
+		?>
+			<link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?php echo $apple_touch_icon[0]; ?>">
+			<link rel="apple-touch-icon-precomposed" href="<?php echo $apple_touch_icon[0]; ?>">
+		<?php
+	}
+
+	$faviconpng = wp_get_attachment_image_src( attachment_url_to_postid(get_theme_mod('siteicon')), array(32,32) );
+	if (!empty($faviconpng)) {
+	?>
+	<link rel="icon" href="<?php echo $faviconpng[0]; ?>">
+	<?php
+	}
+
+	$favicon = wp_get_attachment_image_src( attachment_url_to_postid(get_theme_mod('favicon')), array(16,16) );
+	if (!empty($favicon)) {
+		?>
+			<!--[if IE]><link rel="shortcut icon" href="<?php echo $favicon[0]; ?>"><![endif]-->
+		<?php
+	}
+
+	$main_color = get_theme_mod('site_color');
+	if (!empty($main_color)) {
+		?>
+			<meta name="msapplication-TileColor" content="<?php echo $main_color; ?>">
+		<?php
+	}
+
+	$windows_tile_icon = wp_get_attachment_image_src( attachment_url_to_postid(get_theme_mod('windowstileicon')), array(270,270) );
+	if (!empty($windows_tile_icon)) {
+		?>
+			<meta name="msapplication-TileImage" content="<?php echo $windows_tile_icon[0]; ?>">
+		<?php
+	}
+}
+add_action( 'wp_head', 'whitemap_theme_customizer_icons');
+
+

@@ -1,8 +1,9 @@
 CACHE MANIFEST
-# rev 7 - 2015-01-14T17:39:11.066Z
+# rev 11 - 2015-01-16T13:08:49.489Z
 
 CACHE:
 style.css
+library/css/leaflet.css
 library/css/whitemap.min.css
 library/font/vendor/coustard/coustard-regular-webfont.eot
 library/font/vendor/coustard/coustard-regular-webfont.ttf
@@ -32,8 +33,6 @@ library/font/vendor/ubuntu/ubuntu-regular-webfont.woff2
 library/img/admin_icon.png
 library/img/default_apple_touch_icon.png
 library/img/default_apple_touch_icon@2x.png
-library/img/default_current_location.png
-library/img/default_current_location@2x.png
 library/img/default_favicon.ico
 library/img/default_logo.png
 library/img/default_marker.png

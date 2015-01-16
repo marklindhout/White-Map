@@ -46,6 +46,7 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'library/css/<%= pkg.name %>.min.css': ['library/less/_package.less'],
+					'library/css/leaflet.css': ['library/less/vendor/leaflet/leaflet.less'],
 				},
 			},
 		},

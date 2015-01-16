@@ -9,45 +9,6 @@
 		<meta name="HandheldFriendly" content="True">
 		<meta name="MobileOptimized" content="320">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-		<?php
-			$apple_touch_icon = whitemap_get_option('apple_touch_icon');
-			if (!empty($apple_touch_icon)) {
-			?>
-				<link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
-				<link rel="apple-touch-icon-precomposed" href="<?php echo whitemap_get_option('apple_touch_icon'); ?>">
-			<?php
-			}
-
-			$faviconpng = whitemap_get_option('favicon_png');
-			if (!empty($favicon_png)) {
-			?>
-				<link rel="icon" href="<?php echo whitemap_get_option('favicon_png'); ?>">
-			<?php
-			}
-
-			$favicon = whitemap_get_option('favicon');
-			if (!empty($favicon)) {
-			?>
-				<!--[if IE]><link rel="shortcut icon" href="<?php echo whitemap_get_option('favicon'); ?>"><![endif]-->
-			<?php
-			}
-			
-			$main_color = whitemap_get_option('main_color');
-			if (!empty($main_color)) {
-			?>
-				<meta name="msapplication-TileColor" content="<?php echo whitemap_get_option('main_color'); ?>">
-			<?php
-			}
-			
-			$windows_tile_icon = whitemap_get_option('windows_tile_icon');
-			if (!empty($windows_tile_icon)) {
-			?>
-				<meta name="msapplication-TileImage" content="<?php echo whitemap_get_option('windows_tile_icon'); ?>">
-			<?php
-			}
-		?>
-
 		<meta name="application-name" content="<?php bloginfo('name'); ?>">
 
 		<link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
@@ -93,8 +54,7 @@
 
 			<header id="header">
 				<?php
-					$logo = whitemap_get_option('site_logo');
-					$lc = ( isset($logo) && !empty($logo) ? 'logo' : 'nologo' );
+					$lc = ( !empty(get_theme_mod('site_logo')) ? 'logo' : 'nologo' );
 				?>
 				<h1 class="<?php echo $lc; ?>"><a href="<?php echo home_url(); ?>" rel="nofollow"><?php bloginfo('name'); ?></a></h1>
 				<div id="menutoggle" class="cf">
