@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# rev 11 - 2015-01-16T13:08:49.489Z
+# rev 273 - 2015-01-26T17:09:48.607Z
 
 CACHE:
 style.css
@@ -30,6 +30,7 @@ library/font/vendor/ubuntu/ubuntu-regular-webfont.eot
 library/font/vendor/ubuntu/ubuntu-regular-webfont.ttf
 library/font/vendor/ubuntu/ubuntu-regular-webfont.woff
 library/font/vendor/ubuntu/ubuntu-regular-webfont.woff2
+library/img/Herzbergstrasse-100-Berlin.jpg
 library/img/admin_icon.png
 library/img/default_apple_touch_icon.png
 library/img/default_apple_touch_icon@2x.png
@@ -39,8 +40,6 @@ library/img/default_marker.png
 library/img/default_marker@2x.png
 library/img/default_marker_active.png
 library/img/default_marker_active@2x.png
-library/img/default_marker_center.gif
-library/img/default_marker_center@2x.gif
 library/img/default_marker_shaded.png
 library/img/default_marker_shaded@2x.png
 library/img/default_site_icon.png
@@ -55,6 +54,7 @@ library/img/vendor/leaflet/marker-icon-2x.png
 library/img/vendor/leaflet/marker-icon.png
 library/img/vendor/leaflet/marker-shadow.png
 library/js/map.js
+library/js/ratings.js
 library/js/slide_in_menu.js
 library/js/vendor/jquery/jquery-2.1.0.min.js
 library/js/vendor/jquery/jquery-2.1.1.min.js

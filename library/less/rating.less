@@ -1,85 +1,63 @@
+// Ratings
 @star_size: 32px;
 
-.rating_display {
+
+.rating {
 	display: block;
 	width: (5 * @star_size);
 	height: @star_size;
-	background: transparent url(../img/rating-stars.png) repeat left -64px;
-
-	.inner {
-		display: block;
-		height: @star_size;
-		background: transparent url(../img/rating-stars.png) repeat left -32px;
+	
+	label {
+		display: none;
 	}
-}
 
-.rating_execute {
-	display: inline-block;
-	position: relative;
-	width: (5 * @star_size);
-	height: @star_size;
-	background: transparent url(../img/rating-stars.png) repeat left bottom;
-	vertical-align: bottom;
-
-	.star {
+	.stars {
 		display: block;
 		float: left;
-		width: @star_size;
+		width: (5 * @star_size);
 		height: @star_size;
-		opacity: 0.3;
-		background: red url(../img/rating-stars.png) repeat left -32px;
+		background: transparent url(../img/rating-stars.png) repeat left -64px;
 
-		&:before {
-			position: absolute;
-			opacity: 1;
+		.star {
 			display: block;
 			float: left;
 			width: @star_size;
 			height: @star_size;
-			background-color: red;
+			text-align: center;
+			line-height: @star_size;
+			overflow: hidden;
+			font-weight: bold;
+			color: transparent;
+
+			&.active {
+				background: transparent url(../img/rating-stars.png) repeat left -32px;
+			}
+
 		}
-	}
-}
 
-
-
-#hide {
-	display:none;
-}
- 
-.rating {
-	input {
-		display: inline-block;
-		width: @star_size;
-		height: @star_size;
-		line-height: @star_size;
-		position: absolute;
-		filter: alpha(opacity=0);
-		-moz-opacity: 0;
-		-khtml-opacity :0;
-		opacity: 0;
-		cursor: pointer;
 	}
 
-	span {
-		display: inline-block;
-		width: @star_size;
-		height: @star_size;
-		line-height: @star_size;
-		padding: 0;
-		background: url(../img/rating-stars.png) no-repeat left 0px;
+	.reset_rating {
+		float: right;
 	}
 
-	/* Change span immediately following the checked radio */
+	&.rating-execute {
 
-	input:checked + span {
-		background-position: left 0;
+		.stars {
+			.star {
+				cursor: pointer;
+
+				&:hover {
+					background: transparent url(../img/rating-stars.png) repeat left 0px;
+					color: inherit;
+				}
+			}
+		}
+
 	}
 
-	/* Reset all remaining stars back to default background.
-	   This supersedes the above due to its ordering. */
+	&.rating-display {
 
-	input:checked + span ~ span {
-		background-position: left -64px;
 	}
+
 }

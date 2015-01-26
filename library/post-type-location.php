@@ -40,76 +40,9 @@ function post_type_location() {
 			'has_archive' => 'location', /* you can rename the slug here */
 			'capability_type' => 'post',
 			'hierarchical' => false,
-			'supports' => array( 'title', 'editor', 'author', 'revisions'),
+			'supports' => array( 'title', 'editor', 'author', 'revisions', 'comments'),
 			'taxonomies' => array('post_tag'),
 		)
 	);
 }
 add_action( 'init', 'post_type_location');
-
-// // remove the WordPress standard meta box from the 'location' edit screen.
-// // remove the WordPress standard featured image box from the 'location' edit screen.
-// function location_remove_meta_boxes() {
-// 	remove_meta_box( 'tagsdiv-location-type' , 'location' , 'side' );
-// 	remove_meta_box( 'postimagediv' , 'location' , 'normal' );
-// }
-// add_action( 'admin_menu' , 'location_remove_meta_boxes' );
-
-
-/***************************************************************************************
-CUSTOM META BOXES for the LOCATION content type
-***************************************************************************************/
-
-function cmb_initialize_cmb_meta_boxes() {
-	if ( !class_exists( 'cmb_Meta_Box' ) ) {
-		require_once 'php/cmb/init.php';
-		require_once 'php/cmb/field_map/cmb-field-map.php';
-	}
-}
-add_action( 'init', 'cmb_initialize_cmb_meta_boxes', 9999 );
-
-
-
-function whitemap_meta_boxes( array $meta_boxes ) {
-
-	// Start with an underscore to hide fields from custom fields list
-	$prefix = 'whitemap_';
-
-	$meta_boxes['location_metabox'] = array(
-		'id'         => 'location_metabox',
-		'title'      => __( 'Location', 'whitemap' ),
-		'pages'      => array( 'location' ), // Post type
-		'context'    => 'normal',
-		'priority'   => 'high',
-		'show_names' => true, // Show field names on the left
-		'cmb_styles' => false, // Enqueue the CMB stylesheet on the frontend
-
-		'fields'     => array(
-			array(
-				'name'		=> __( 'Street Address', 'whitemap' ),
-				'id'		=> $prefix . 'street_address',
-				'type'		=> 'text',
-			),
-			array(
-				'name'		=> __( 'Postal Code', 'whitemap' ),
-				'id'		=> $prefix . 'postal-code',
-				'type'		=> 'text',
-			),
-			array(
-				'name'		=> __( 'City', 'whitemap' ),
-				'id'		=> $prefix . 'city',
-				'type'		=> 'text',
-			),
-			array(
-				'name'		=> 'Coordinates',
-				'desc'		=> 'Drag the marker to set the exact location',
-				'id'		=> $prefix . 'location',
-				'type'		=> 'pw_map',
-				'sanitization_cb' => 'pw_map_sanitise',
-			),
-		),
-	);
-
-	return $meta_boxes;
-}
-add_filter( 'cmb_meta_boxes', 'whitemap_meta_boxes' );

@@ -1,0 +1,53 @@
+// Messages: Errors, Warnings, Confirmations and Notifications.
+
+.message {
+	display: block;
+	border: 1px solid transparent;
+	padding: @font_base_unit @font_base_unit @font_base_unit (@font_base_unit * 3);
+	.rounded();
+
+	&:before {
+		display: block;
+		width: @font_base_unit;
+		height: @font_base_unit;
+		float: left;
+		font-family: 'FontAwesome';
+		font-size: @fontsize_xl;
+		margin-left: (-@font_base_unit * 2);
+		text-align: center;
+		opacity: 0.66;
+	}
+
+	&.message-error {
+		border-color: lighten(desaturate(@colorred, 60%), 20%);
+		color: desaturate(@colorred, 60%);
+		background-color: desaturate(lighten(@colorred, 50%), 60%);
+
+		&:before {content: @fa-var-exclamation-triangle;}
+	}
+
+	&.message-warning {
+		border-color: lighten(desaturate(@coloryellow, 60%), 20%);
+		color: desaturate(@coloryellow, 60%);
+		background-color: desaturate(lighten(@coloryellow, 50%), 60%);
+
+		&:before {content: @fa-var-exclamation-circle;}
+	}
+
+	&.message-confirmation {
+		border-color: lighten(desaturate(@colorgreen, 60%), 20%);
+		color: desaturate(@colorgreen, 60%);
+		background-color: desaturate(lighten(@colorgreen, 50%), 60%);
+
+		&:before {content: @fa-var-check;}
+	}
+
+	&.message-notification {
+		border-color: lighten(desaturate(@colorblue, 60%), 20%);
+		color: desaturate(@colorblue, 60%);
+		background-color: desaturate(lighten(@colorblue, 50%), 60%);
+
+		&:before {content: @fa-var-info;}
+	}
+
+}

@@ -1,4 +1,13 @@
 <?php
+/********************************************************
+DEBUGGING
+********************************************************/
+
+function d($v) {
+	echo '<pre>';
+	print_r($v);
+	echo '</pre>';
+}
 
 /********************************************************
 CLEANUP HEAD
@@ -172,6 +181,8 @@ function whitemap_scripts_and_styles() {
 				'map_marker_active'    => whitemap_get_map_marker('active'),
 			)
 		);
+
+		if ( is_singular() ) wp_enqueue_script( "comment-reply" );
 	}
 }
 
@@ -332,17 +343,160 @@ function whitemap_register_sidebars() {
 require_once( 'library/comments-walker.php' );
 
 
-function whitemap_get_overall_rating($id) {
 
+
+
+function whitemap_comment_form() {
+	// This is a wrapper for comment_form() with some extensions that are specific for this theme
+
+	global $current_user,$post;
+
+	$req      = get_option( 'require_name_email' );
+	$aria_req = ( $req ? " aria-required='true'" : '' );
+
+	$comments_args = array(
+		'id_form'           => 'commentform',
+		'id_submit'         => 'submit',
+		'title_reply'       => __('Rate this place', 'whitemap'),
+		'title_reply_to'    => null,
+		'cancel_reply_link' => null,
+		'label_submit'      => __('Post your rating', 'whitemap'),
+		'comment_field'     => '<div class="comment-form-comment">'
+							. '<textarea id="comment" name="comment" cols="45" rows="8" aria-required="true"></textarea>'
+							. '</div>',
+		'must_log_in'       => '<div class="must-log-in">'
+							. sprintf(__( 'You must be <a href="%s">logged in</a> to post a comment.' ), wp_login_url( apply_filters( 'the_permalink', get_permalink() ) )	)
+							. '</div>',
+		'logged_in_as'      => '<div class="logged-in-as">' . __( 'Logged in as', 'whitemap') . '<a class="user" href="' . admin_url( 'profile.php' ) . '">' . $current_user->display_name . '</a>'
+								. '<a class="logout" href="' . wp_logout_url( apply_filters( 'the_permalink', get_permalink() )) . '" title="' . __('Log out of this account', 'whitemap') . '">'
+								. __('Log out', 'whitemap') . '</a>'
+							. '</div>',
+		'comment_notes_before' => '<div class="comment-notes">' . __( 'Your email address will not be published.', 'whitemap' ) . '</div>',
+		'comment_notes_after' => ''
+	);
+
+	$usercomment = get_comments(
+		array(
+			'author_email' => $current_user->user_email,
+			'user_id'      => $current_user->ID,
+			'post_id'      => $post->ID,
+		)
+	);
+
+	// d($usercomment);
+	// Only show the comment form when there is not yet a comment by current user on current post.
+	if($usercomment) {
+		echo '<div class="message message-notification">You can write exactly one review per location</div>';
+	}
+	else {
+		comment_form($comments_args);
+	}
+	
+}
+
+
+
+// Remove unneccesary comment fields
+function whitemap_remove_comment_fields($fields) {
+
+	// Remove field: "Web site"
+	unset($fields['url']);
+
+	return $fields;
+}
+add_filter( 'comment_form_default_fields', 'whitemap_remove_comment_fields' );
+
+
+// Add custom rating field to comments
+function whitemap_add_rating_comment_field() {
+	?>
+		<div class="rating rating-execute">
+			<label for="rating"><?php _e( 'Rating', 'whitemap' ); ?></label>
+			<a href="#" class="reset_rating"><i class="fa fa-times"></i></a>
+			<div class="stars">
+				<a class="star">1</a>
+				<a class="star">2</a>
+				<a class="star">3</a>
+				<a class="star">4</a>
+				<a class="star">5</a>
+			</div>
+			<input type="hidden" name="rating" />
+		</div>
+	<?php
+}
+add_action( 'comment_form_logged_in_after', 'whitemap_add_rating_comment_field' );
+add_action( 'comment_form_after_fields', 'whitemap_add_rating_comment_field' );
+
+
+// Validate and preprocess the posted rating.
+function whitemap_validate_comment_rating( $commentdata ) {
+
+	global $current_user,$post;
+
+	$rawrating = $_REQUEST['rating'];
+
+	$usercomment = get_comments(
+		array(
+			'author_email' => $current_user->user_email,
+			'user_id'      => $current_user->ID,
+			'post_id'      => $post->ID,
+		)
+	);
+
+	// Enforce rating as numeric value
+	if ( !is_numeric($rawrating) ) {
+		wp_die( '<strong>ERROR</strong>: ' . __( 'The rating is not a numeric value. Correct this and retry.', 'whitemap' ) );
+	}
+
+	// Enforce presence of rating
+	if ( !isset($rawrating) || $rawrating == 0 ) {
+		wp_die( '<strong>ERROR</strong>: ' . __( 'You did not add a rating. Hit the Back button on your Web browser and resubmit your comment with a rating.', 'whitemap' ) );
+	}
+
+	// Only validate the comment form when there is not yet a comment by this current user on the current post.
+	if($usercomment) {
+		wp_die( __( '<strong>ERROR</strong>: ' .'You can only add one rating per location.', 'whitemap' ) );
+	}
+
+	return $commentdata;
+}
+add_filter( 'preprocess_comment', 'whitemap_validate_comment_rating' );
+
+
+// Add the rating to the comment
+function whitemap_save_comment_meta_data( $comment_id ) {
+
+	$rawrating = $_REQUEST['rating'];
+
+	if ( (isset($rawrating)) && ($rawrating != '') && ($rawrating != 0) ) {
+
+		// Filter and verify the rating data here!
+		$rating = wp_filter_nohtml_kses($rawrating);
+
+		// Add the rating to the comment
+		add_comment_meta( $comment_id, 'rating', $rating );
+	}
+	else {
+		wp_die( '<strong>ERROR</strong>: ' . __( 'No rating data found in the request.', 'whitemap' ) );
+	}
+
+}
+add_action( 'comment_post', 'whitemap_save_comment_meta_data' );
+
+
+/********************************************************
+POST RATINGS
+********************************************************/
+
+function whitemap_get_overall_rating($id) {
 	$args = array(
-		'post_id'  => $id,
+		'post_id'  => ($id ? $id : get_the_id()),
 		'meta_key' => 'rating',
 		'status'   => 'approve',
 	);
 
 	$comments_query = new WP_Comment_Query;
-	$comments = $comments_query->query( $args );
-
+	$comments       = $comments_query->query( $args );
 	$overall_rating = array();
 
 	if ( $comments ) {
@@ -350,7 +504,6 @@ function whitemap_get_overall_rating($id) {
 			array_push($overall_rating, get_comment_meta( $comment->comment_ID, 'rating', true) );
 		}
 	}
-
 	return $overall_rating;
 }
 
@@ -370,108 +523,59 @@ function whitemap_get_rating_count($id) {
 }
 
 
+// check to see if this post has ratings
+function whitemap_has_ratings($id) {
+	$has_ratings = whitemap_get_rating_count($id) > 0;
+	return $has_ratings;
+}
 
-function whitemap_comment_form() {
-	// This is a wrapper for comment_form() with some extensions that are specific for this theme
+// Add a rating meta box to the comment editing screen
+function whitemap_add_comment_metabox() {
+	add_meta_box( 'title', __('Rating', 'whitemap'), 'whitemap_comment_rating_meta_box', 'comment', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes_comment', 'whitemap_add_comment_metabox' );
 
-	global $current_user,$post;
-
-	$commenter = wp_get_current_commenter();
-	$req       = get_option( 'require_name_email' );
-	$aria_req  = ( $req ? " aria-required='true'" : '' );
-
-	$comments_args = array(
-		'id_form'           => 'commentform',
-		
-		'id_submit'         => 'submit',
-		
-		'title_reply'       => __('Rate this place', 'whitemap'),
-		
-		'title_reply_to'    => null,
-		
-		'cancel_reply_link' => null,
-		
-		'label_submit'      => __('Post your rating', 'whitemap'),
-		
-		'comment_field'     => ''
-							. '<div class="comment-form-rating"><label for="rating">' . __( 'Rating', 'whitemap' ) . '</label>'
-							 . '<div class="rating">'
-								 . '<input type="radio" name="rating" value="1" checked /><span></span>'
-								 . '<input type="radio" name="rating" value="2" /><span></span>'
-								 . '<input type="radio" name="rating" value="3" /><span></span>'
-								 . '<input type="radio" name="rating" value="4" /><span></span>'
-								 . '<input type="radio" name="rating" value="5" /><span></span>'
-							 . '</div>'
-							. '</div>'
-							. '<div class="comment-form-comment"><label for="comment">'
-							. _x( 'Comment', 'noun' )
-							. '</label><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true">'
-							. '</textarea>'
-							. '</div>',
-		
-		'must_log_in'       => '<div class="must-log-in">'
-							. sprintf(__( 'You must be <a href="%s">logged in</a> to post a comment.' ), wp_login_url( apply_filters( 'the_permalink', get_permalink() ) )	)
-							. '</div>',
-		
-		'logged_in_as'      => '<div class="logged-in-as">'
-							. sprintf(__( 'Logged in as <a href="%1$s">%2$s</a>. <a href="%3$s" title="Log out of this account">Log out?</a>' ), admin_url( 'profile.php' ), $user_identity, wp_logout_url( apply_filters( 'the_permalink', get_permalink( ) ) ) )
-							. '</div>',
-		
-		'comment_notes_before' => '<div class="comment-notes">'
-							. __( 'Your email address will not be published.', 'whitemap' )
-							. ( $req ? $required_text : '' )
-							. '</div>',
-
-		'comment_notes_after' => '',
-		
-		'fields'            => apply_filters('comment_form_default_fields', array(
-			'author' =>
-				'<div class="comment-form-author"><label for="author">' . __( 'Name', 'domainreference' ) . '</label> ' .
-				( $req ? '<span class="required">*</span>' : '' ) .
-				'<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) .
-				'" size="30"' . $aria_req . ' /></div>',
-
-			'email' =>
-				'<div class="comment-form-email"><label for="email">' . __( 'Email', 'domainreference' ) . '</label> ' .
-				( $req ? '<span class="required">*</span>' : '' ) .
-				'<input id="email" name="email" type="text" value="' . esc_attr(  $commenter['comment_author_email'] ) .
-				'" size="30"' . $aria_req . ' /></div>',
-			)
-		),
-	);
+// Describe the layout of the comment rating meta box
+function whitemap_comment_rating_meta_box ($comment) {
+	$rating = get_comment_meta( $comment->comment_ID, 'rating', true );
+	wp_nonce_field( 'whitemap_comment_rating', 'whitemap_comment_rating', false );
+	?>
+	<div>
+		<label for="rating"><?php _e( 'Rating: ' ); ?></label>
+		<span class="commentratingbox">
+			<?php for( $i=1; $i <= 5; $i++ ) {
+					echo '<span class="commentrating">';
+					echo '<input type="radio" name="rating" value="'. $i .'"' . ($rating == $i ? ' checked="checked"' : '') . ' />'. $i;
+					echo '</span>';
+				}
+			?>
+		</span>
+	</div>
+	<?php
+}
 
 
-	$usercomment = get_comments(
-		array(
-			'author_email' => $current_user->user_email,
-			'user_id' => $current_user->ID,
-			'post_id' => $post->ID,
-		)
-	);
+function extend_comment_edit_metafields( $comment_id ) {
 
-	if($usercomment) {
-		echo "<!-- One comment per user per post -->";
+	$rawrating = ( isset($_REQUEST['rating']) ? $_REQUEST['rating'] : null);
+
+	// Check the NONCE field
+	if( ! isset( $_POST['whitemap_comment_rating'] ) || ! wp_verify_nonce( $_POST['whitemap_comment_rating'], 'whitemap_comment_rating' ) ) {
+		return;
 	}
+
+	// See if the rating contains something meaningful
+	if ( isset( $rawrating ) && $rawrating != '' && $rawrating != 0 ) {
+		$rating = wp_filter_nohtml_kses($rawrating);
+		update_comment_meta( $comment_id, 'rating', $rating );
+	}
+	// otherwise die
 	else {
-		comment_form($comments_args);
+		wp_die( '<strong>ERROR</strong>: ' . __( 'You did not add a rating. Hit the Back button on your Web browser and resubmit your comment with a rating.', 'whitemap' ) );
+		//delete_comment_meta( $comment_id, 'rating');
 	}
-	
 }
-
-function whitemap_save_comment_meta_data( $comment_id ) {
-
-	if ( ( isset( $_POST['rating'] ) ) && ( $_POST['rating'] != '') ) {
-
-		// Filter and verify the rating data here!
-		$rating = wp_filter_nohtml_kses($_POST['rating']);
-
-		// Add the rating to the comment
-		add_comment_meta( $comment_id, 'rating', $rating );
-	}
-
-}
-add_action( 'comment_post', 'whitemap_save_comment_meta_data' );
-
+add_action( 'edit_comment', 'extend_comment_edit_metafields' );
 
 
 

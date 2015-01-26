@@ -19,10 +19,22 @@
 							<?php echo get_post_meta(get_the_id(), 'whitemap_city', true); ?>
 						</span>
 					</address>
-					<div class="rating_display" data-rating="<?php echo whitemap_get_rating_average(get_the_id()); ?>">
-						<div class="inner" style="width: <?php echo whitemap_get_rating_average(get_the_id()) * 20; ?>%;"></div>
-					</div>
-					<?php echo whitemap_get_rating_count(get_the_id()); ?> ratings
+
+					<?php if( whitemap_has_ratings(get_the_id()) ) { ?>
+						<?php
+							$average_rating = whitemap_get_rating_average(get_the_id());
+							$ratings_amount = whitemap_get_rating_count(get_the_id());
+						?>
+						<div class="rating rating-display" data-rating="<?php echo $average_rating; ?>">
+							<div class="stars">
+								<?php for ($k = 0; $k < $average_rating; $k += 1) { ?>
+									<div class="star active"><?php echo $k+1; ?></div>
+								<?php }; ?>
+							</div>
+						</div>
+						<?php echo $ratings_amount; ?> <?php ( $ratings_amount == 1 ? _e('rating', 'whitemap') :  _e('ratings', 'whitemap') ); ?>
+					<?php } ?>
+
 				</header>
 
 				<div id="wmap">

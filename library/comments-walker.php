@@ -43,25 +43,34 @@ class whitemap_walker_comment extends Walker_Comment {
 					<?php echo get_avatar( $comment, 40, '[default gravatar URL]', 'Author’s gravatar' ); ?>
 				</figure>
 
-				<?php printf(__( '<cite class="fn">%1$s</cite> %2$s', 'whitemap' ), get_comment_author_link(), edit_comment_link(__( '(Edit)', 'whitemap' ),'  ','') ) ?>
-				<time itemprop="datePublished" datetime="<?php echo comment_time('c'); ?>"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ) ?>"><?php comment_time(__( 'F jS, Y', 'whitemap' )); ?> </a></time>
+				<cite class="fn"><?php echo get_comment_author_link(); ?></cite>
+
+				<time itemprop="datePublished" datetime="<?php echo comment_time('c'); ?>">
+					<a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ) ?>">
+						 <?php echo human_time_diff( get_comment_time('U'), current_time('timestamp') ) . ' ' . __('ago', 'whitemap'); ?> 
+					</a>
+				</time>
 
 				<?php if( $commentrating = get_comment_meta( get_comment_ID(), 'rating', true ) ) { ?>
-					<div class="rating_display" data-rating="<?php echo $commentrating; ?>">
-						<div class="inner" style="width: <?php echo $commentrating * 20; ?>%;"></div>
+					<div class="rating rating-display" data-rating="<?php echo $commentrating; ?>">
+						<div class="stars">
+							<?php for ($k = 0; $k < $commentrating; $k += 1) { ?>
+								<div class="star active"><?php echo $k+1; ?></div>
+							<?php }; ?>
+						</div>
 					</div>
 				<?php } ?>
 			</header>
 		<?php if ($comment->comment_approved == '0') : ?>
-			<div class="alert alert-info">
+			<div class="message message-warning">
 				<p><?php _e( 'Your comment is awaiting moderation.', 'whitemap' ) ?></p>
 			</div>
 		<?php endif; ?>
 			<section class="comment_content cf" itemprop="text">
 				<?php comment_text() ?>
 			</section>
-			<?php// comment_reply_link(array_merge( $args, array('depth' => $depth, 'max_depth' => $args['max_depth']))) ?>
-		
+			<?php echo edit_comment_link( __('Edit this rating', 'whitemap'), '<p>', '</p>'); ?>
+	
 	<?php
 	}
 
