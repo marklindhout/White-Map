@@ -11,6 +11,4 @@ if ( have_comments() ) {
 	) );
 }
 
-if ( is_user_logged_in() ) {
-	whitemap_comment_form();
-}
+whitemap_comment_form();
