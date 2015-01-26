@@ -107,6 +107,19 @@ WhiteMap.add_markers = function () {
 			popup_text += '</h2>\n';
 		}
 
+		if ( posts[j].hasOwnProperty('rating') && posts[j].hasOwnProperty('ratingcount') ) {
+			popup_text += '<div class="ratingcount">';
+			popup_text += '(' + posts[j].ratingcount + ')\n';
+			popup_text += '</div>\n';
+			popup_text += '<div class="rating">';
+			popup_text += '<div class="stars">';
+			for (var x = 0; x < posts[j].rating; x++) {
+				popup_text += '<div class="star active">' + x + '</div>';
+			}
+			popup_text += '</div>\n';
+			popup_text += '</div>\n';
+		}
+
 		if ( posts[j].hasOwnProperty('street') || posts[j].hasOwnProperty('postal') || posts[j].hasOwnProperty('city') ) {
 			popup_text += '<div class="address">';
 

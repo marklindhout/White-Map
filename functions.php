@@ -748,6 +748,8 @@ function whitemap_get_locations() {
 		$ray['latitude']    = floatval(get_post_meta($pid, 'whitemap_location_latitude', true));
 		$ray['longitude']   = floatval(get_post_meta($pid, 'whitemap_location_longitude', true));
 		$ray['tags']        = return_tags_as_array($pid);
+		$ray['rating']      = whitemap_get_rating_average($pid);
+		$ray['ratingcount'] = whitemap_get_rating_count($pid);
 		$ray['new']         = date('U') - $ray['timestamp'] <= (60 * 60 * 24 * 5); // New if < 5 days ago
 
 		$locations[]        = $ray;
