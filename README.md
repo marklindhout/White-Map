@@ -1,2 +1,2 @@
 # White-Map
-A white-label WordPress theme for map-based web sites with a strong focus on privacy.
+A white-label WordPress map theme with a strong focus on privacy.
