@@ -1,0 +1,105 @@
+/*****************************************************************************
+ BUTTON
+*****************************************************************************/
+.button_base(@bgcolor: @colorbrand, @textcolor: @colorlight) {
+	background: @bgcolor url(../img/pattern-light.png) repeat center center;
+	border: 0;
+	color: @textcolor;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	font-family: @fontheadline;
+	font-weight: normal;
+	line-height: (@font_base_unit * 2);
+	margin: 0;
+	overflow: visible;
+	padding: 0 (@font_base_unit * 0.75);
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	text-indent: 0;
+	text-shadow: 2px 2px 1px @colordark;
+	.drop-shadow();
+
+	&:hover {
+		color: lighten(@textcolor, 50%);
+		top: 1px;
+		left: 1px;
+	}
+
+	&:active {
+		position: relative;
+		top: 1px;
+	}
+}
+
+.button {
+	.button_base();
+}
+
+.button_white {
+	.button_base(@colorlight, @colordark);
+}
+
+/*****************************************************************************
+ INPUT FIELDS
+*****************************************************************************/
+.input_field(@bgcolor: @colorlight, @textcolor: @colordark) {
+	background-color: @bgcolor;
+	border: 0;
+	padding: 0;
+	color: @textcolor;
+	cursor: pointer;
+	display: inline-block;
+	border: 1px solid desaturate(@colorbrand, 60%);
+	line-height: ((@font_base_unit * 2) - 2px);
+	text-indent: (@font_base_unit / 2);
+	.transition();
+
+	&:focus {
+		.box-shadow(0px 0px (@font_base_unit / 4) (@font_base_unit / 8) darken(@colorlight, 30%));
+	}
+}
+
+/*****************************************************************************
+ PULSE ANIMATION (for map center marker)
+*****************************************************************************/
+
+.pulse() {
+	-webkit-animation: pulseanimation 1s linear infinite;
+	-moz-animation: pulseanimation 1s linear infinite;
+	-ms-animation: pulseanimation 1s linear infinite;
+	animation: pulseanimation 1s linear infinite;
+	width: 100%;
+	height: 100%;
+}
+
+.pulse_keyframes() {
+	0%, 50% {
+		background-color: fade(@colorbrand, 75%);
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	100% {
+		background-color: fade(@colorbrand, 0%);
+		margin: -50%;
+		width: 200%;
+		height: 200%;
+	}
+
+}
+
+@-webkit-keyframes pulseanimation {
+	.pulse_keyframes;
+}
+@-moz-keyframes pulseanimation {
+	.pulse_keyframes;
+}
+@-ms-keyframes pulseanimation {
+	.pulse_keyframes;
+}
+@keyframes pulseanimation {
+	.pulse_keyframes;
+}

@@ -1,0 +1,63 @@
+// Ratings
+@star_size: 32px;
+
+
+.rating {
+	display: block;
+	width: (5 * @star_size);
+	height: @star_size;
+	
+	label {
+		display: none;
+	}
+
+	.stars {
+		display: block;
+		float: left;
+		width: (5 * @star_size);
+		height: @star_size;
+		background: transparent url(../img/rating-stars.png) repeat left -64px;
+
+		.star {
+			display: block;
+			float: left;
+			width: @star_size;
+			height: @star_size;
+			text-align: center;
+			line-height: @star_size;
+			overflow: hidden;
+			font-weight: bold;
+			color: transparent;
+
+			&.active {
+				background: transparent url(../img/rating-stars.png) repeat left -32px;
+			}
+
+		}
+
+	}
+
+	.reset_rating {
+		float: right;
+	}
+
+	&.rating-execute {
+
+		.stars {
+			.star {
+				cursor: pointer;
+
+				&:hover {
+					background: transparent url(../img/rating-stars.png) repeat left 0px;
+					color: inherit;
+				}
+			}
+		}
+
+	}
+
+	&.rating-display {
+
+	}
+
+}

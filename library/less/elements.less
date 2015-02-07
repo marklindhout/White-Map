@@ -1,0 +1,82 @@
+// LINKS
+a, a:visited {
+	color: @colorbrand;
+
+	&:hover, &:focus {
+		color: darken(@colorbrand, 10%);
+	}
+
+	&:active {
+
+	}
+
+	&:link {
+		-webkit-tap-highlight-color : rgba( 0, 0, 0, 0.3 );
+	}
+}
+
+
+// HEADINGS
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+	text-rendering: optimizelegibility;
+	font-weight: normal;
+	font-family:  @fontheadline;
+	color: @colorblack;
+	margin: 0;
+	padding: 0;
+	line-height: 1em;
+
+	a {
+		text-decoration: none;
+	}
+}
+
+h1, .h1 {
+	font-size: @fontsize_xxl;
+	margin-bottom: (@font_base_unit * 0.5);
+}
+
+h2, .h2 {
+	font-size: @fontsize_xl;
+	margin-bottom: (@font_base_unit * 0.5);
+}
+
+h3, .h3 {
+	font-size: @fontsize_l;
+	color: @colormedium;
+	margin-bottom: (@font_base_unit * 0.5);
+}
+
+h4, .h4 {
+	font-size: @fontsize_l;
+	margin-bottom: (@font_base_unit * 0.5);
+}
+
+h5, .h5 {
+	font-size: @fontsize_l;
+	font-family: @fontcopy;
+	font-weight: bold;
+	margin-bottom: (@font_base_unit * 0.5);
+}
+
+h6, .h6 {
+	font-size: @fontsize_l;
+	font-family: @fontcopy;
+	color: @colormedium;
+	margin-bottom: (@font_base_unit * 0.25);
+}
+
+// Text
+p {
+	margin-top: 0;
+	margin-bottom: (@font_base_unit * 0.75);
+}
+
+
+// QUOTES
+blockquote {
+	margin-left: 1em;
+	padding-left: 1em;
+	border-left: 4px solid @colorbrand;
+	color: @colorblack;
+}

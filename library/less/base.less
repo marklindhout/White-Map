@@ -1,0 +1,107 @@
+#header {
+	z-index: 1;
+	overflow: hidden;
+	height: @header_height;
+	color: @colordark;
+	background: @colorlight url(../img/pattern-light.png) repeat center center;
+	border-bottom: 2px solid lighten(@colorlight, 10%);
+
+	a {
+		color: @colorlight;
+
+		&:hover {
+			color: lighten(@colorlight, 30%);
+		}
+	}
+
+	h1 {
+		font-size: (@font_base_unit * 1.5);
+		position: absolute;
+		z-index: 1;
+		left: 50%;
+		display: block;
+		width: 190px;
+		margin: 0 0 0 -95px;
+		padding: 0;
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-color: transparent;
+		text-align: center;
+
+		&.logo {
+			overflow: hidden;
+
+			a {
+				line-height: inherit;
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		&.nologo {
+			background: @colordark url(../img/pattern-dark.png) repeat center center;
+			min-height: @header_height;
+			padding: @font_base_unit;
+			line-height: (@font_base_unit * 2);
+			.drop-shadow();
+
+			a {
+				color: @colorlight;
+				border-bottom: 2px solid transparent;
+				line-height: inherit;
+				display: block;
+				width: 100%;
+				height: 100%;
+
+				&:hover {
+					border-bottom: 2px solid @colorbrand;
+				}
+			}
+		}
+		
+	}
+
+	#menutoggle {
+		float: left;
+		height: @header_height;
+
+		.button {
+			padding: 0;
+			margin: @font_base_unit;
+			height: (@header_height / 2);
+			width: (@header_height / 2);
+		}
+	}
+
+	.admin_links {
+		float: right;
+		height: @header_height;
+
+		.button {
+			margin: @font_base_unit;
+			height: (@header_height / 2);
+		}
+	}
+
+	nav, .top-nav {
+		z-index: 1;
+		float: left;
+		margin: 0;
+		padding: 0;
+	}
+
+	.top-nav {
+
+		li {
+			float: left;
+
+			a {
+				.button();
+			}
+			
+		}
+
+	}
+
+}
