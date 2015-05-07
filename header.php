@@ -54,7 +54,8 @@
 
 			<header id="header">
 				<?php
-					$lc = ( !empty(get_theme_mod('site_logo')) ? 'logo' : 'nologo' );
+				  $logo = get_theme_mod( 'site_logo' );
+					$lc = ( ! empty($logo) ? 'logo' : 'nologo' );
 				?>
 				<h1 class="<?php echo $lc; ?>"><a href="<?php echo home_url(); ?>" rel="nofollow"><?php bloginfo('name'); ?></a></h1>
 				<div id="menutoggle" class="cf">
